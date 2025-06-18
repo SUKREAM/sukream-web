@@ -13,7 +13,7 @@ const GlobalStyle = createGlobalStyle`
 
   #root {
     width: 100%;
-    mix-width: 375px;
+    max-width: 390px;
     background:#ffebeb;
     min-height: 100vh;
     display: flex;
