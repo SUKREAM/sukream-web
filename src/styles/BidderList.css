@@ -1,8 +1,6 @@
 .box {
-  height: 222px;
   width: 361px;
-  margin-top: 250px;
-  margin-left: 15px;
+  margin: 0px auto 0;
 }
 
 .box .group {
