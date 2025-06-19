@@ -3,9 +3,8 @@
   background-color: #f7f7f7;
   border-radius: 4px;
   padding: 12px 20px 8px;
-  margin: 350px auto 20px; 
+  margin: 10px auto 20px; /* 상단 위치 조절: 너무 아래 안 가도록 40px 정도만 */
 }
-
 
 .auction-status-content {
   display: flex;
@@ -48,4 +47,21 @@
   color: #828282;
   text-align: center;
   margin: 0;
+}
+
+.auction-title-box {
+  width: 320px;
+  margin: 0 auto; /* 아래 상태 박스와 간격만 유지 */
+  text-align: center;
+}
+
+.product-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: #000000;
+}
+
+.product-name {
+  font-size: 16px;
+  color: #000000;
 }
