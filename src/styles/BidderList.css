@@ -1,0 +1,174 @@
+.box {
+  width: 361px;
+  margin: 0px auto 0;
+}
+
+.box .group {
+  height: 222px;
+  width: 361px;
+  margin: 0 auto;
+}
+
+.box .overlap-wrapper {
+  height: 222px;
+  width: 369px;
+}
+
+.box .overlap {
+  background-color: #f9f8f8;
+  border-radius: 10px;
+  box-shadow: 0px 4px 4px #00000040;
+  height: 222px;
+  position: relative;
+  width: 361px;
+}
+
+/* 입찰자 목록 텍스트 */
+.box .text-wrapper {
+  color: #000000;
+  font-size: 19px;
+  font-weight: 600;
+  height: 40px;
+  left: 24px;
+  letter-spacing: 0.25px;
+  line-height: 20px;
+  position: absolute;
+  top: 15px;
+  width: 98px;
+  z-index: 10;
+}
+
+/* 입찰자 각각 박스 위치 */
+.box .overlap-1 {
+  position: absolute;
+  top: 48px;
+  left: 19px;
+  width: 319px;
+  height: 39px;
+}
+
+.box .overlap-2 {
+  position: absolute;
+  top: 105px;
+  left: 19px;
+  width: 320px;
+  height: 39px;
+}
+
+.box .overlap-3 {
+  position: absolute;
+  top: 162px;
+  left: 19px;
+  width: 319px;
+  height: 39px;
+}
+
+/* 입찰자 박스 배경 */
+.box .rectangle {
+  background-color: #ffd4d2;
+  border-radius: 10px;
+  height: 39px;
+  left: 0;
+  position: absolute;
+  top: 0;
+  width: 317px;
+}
+
+/* 닉네임 텍스트 */
+.box .text-wrapper-4 {
+  color: #000000;
+  font-size: 14px;
+  font-weight: 400;
+  height: 30px;
+  left: 13px;
+  letter-spacing: 0.25px;
+  line-height: 20px;
+  position: absolute;
+  top: 10px;
+  width: 59px;
+}
+
+/* 낙찰하기 버튼 래퍼 */
+.box .div-wrapper {
+  height: 31px;
+  left: 229px;
+  position: absolute;
+  top: 4px;
+  width: 92px;
+}
+
+/* 낙찰하기 버튼 그룹 */
+.box .overlap-group-2 {
+  height: 31px;
+  position: relative;
+  width: 88px;
+}
+
+/* 낙찰하기 텍스트 (뒤쪽) */
+.box .text-wrapper-3 {
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 400;
+  left: 22px;
+  position: absolute;
+  top: 7px;
+  width: 56px;
+}
+
+.award-button {
+  background-color: #f76059;
+  border: none;
+  border-radius: 50px;
+  height: 30px;
+  width: 88px;
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 400;
+  cursor: pointer;
+  display: flex;
+  align-items: center; /* 수직 중앙 정렬 */
+  justify-content: center; /* 수평 중앙 정렬 */
+  letter-spacing: 0.25px;
+  position: relative;
+  user-select: none;
+  padding: 0;
+}
+
+.box .div {
+  color: #000000;
+  font-size: 14px;
+  font-weight: 400;
+  height: 30px;
+  left: 13px;
+  letter-spacing: 0.25px;
+  line-height: 20px;
+  position: absolute;
+  top: 4px;
+  width: 59px;
+}
+
+.box .overlap-group-wrapper {
+  height: 31px;
+  left: 228px;
+  top: 5px;
+  width: 92px;
+}
+
+.box .group-2 {
+  height: 31px;
+  left: 228px;
+  top: 4px;
+  width: 92px;
+}
+
+.box .overlap-4 {
+  height: 31px;
+  position: relative;
+}
+
+.box .group-3 {
+  height: 31px;
+  left: 0;
+  top: 0;
+  width: 92px;
+}

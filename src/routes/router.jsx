@@ -9,7 +9,7 @@ import ReviewPage from "../pages/Review/ReviewPage";
 import ReviewWritePage from "../pages/Review/ReviewWritePage";
 import BuyHistoryPage from "../pages/MyPage/BuyHistoryPage";
 import SellHistoryPage from "../pages/MyPage/SellHistoryPage";
-
+import AwardManagementPage from "../pages/Bidder/AwardManagementPage";
 
 
 const router = createBrowserRouter([
@@ -27,8 +27,9 @@ const router = createBrowserRouter([
       { path: "mypage/sell",element: <SellHistoryPage />},
       // 리뷰 관련 라우트
       { path: "reviews", element: <ReviewPage /> },           // 리뷰 조회
-      { path: "reviews/write/:productId", element: <ReviewWritePage /> }, // 리뷰 작성회 페이지
-      
+      { path: "reviews/write/:productId", element: <ReviewWritePage /> }, // 리뷰 작성
+      { path: "award-management", element: <AwardManagementPage />}
+
     ],
   },
 ]);
