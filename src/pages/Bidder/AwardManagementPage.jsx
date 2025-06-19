@@ -2,6 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import { BidderList } from "../../components/BidderList";
 import { AuctionStatusBox } from "../../components/AuctionStatusBox";
+import { AuctionImage } from "../../components/AuctionImage";
 
 const PageWrapper = styled.div`
   display: flex;
@@ -37,18 +38,13 @@ const Description = styled.p`
 `;
 
 const AwardManagementPage = () => {
-    return (
-        <PageWrapper>
-            <Section>
-                <AuctionStatusBox />
-            </Section>
-
-            {/* 입찰가 리스트 */}
-            <Section>
-                <BidderList />
-            </Section>
-        </PageWrapper>
-    );
+  return (
+    <PageWrapper>
+      <AuctionImage />
+      <AuctionStatusBox />
+      <BidderList />
+    </PageWrapper>
+  );
 };
 
 export default AwardManagementPage;
