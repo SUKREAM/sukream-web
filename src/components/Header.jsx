@@ -4,7 +4,6 @@ import { Link } from "react-router-dom";
 
 import logoImg from "../assets/images/logo.svg";
 import mypageImg from "../assets/images/myBtn.svg";
-import searchImg from "../assets/images/searchBtn.svg";
 
 const HeaderWrapper = styled.header`
   background: #ffffff;
@@ -46,9 +45,6 @@ const Header = () => (
     <div>
       <IconButton to="/mypage">
         <img src={mypageImg} alt="My Page" />
-      </IconButton>
-      <IconButton to="/search">
-        <img src={searchImg} alt="Search" />
       </IconButton>
     </div>
   </HeaderWrapper>
