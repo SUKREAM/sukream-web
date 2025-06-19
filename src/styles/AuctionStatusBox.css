@@ -1,0 +1,67 @@
+.auction-status-box {
+  width: 320px;
+  background-color: #f7f7f7;
+  border-radius: 4px;
+  padding: 12px 20px 8px;
+  margin: 10px auto 20px; /* 상단 위치 조절: 너무 아래 안 가도록 40px 정도만 */
+}
+
+.auction-status-content {
+  display: flex;
+  justify-content: center; 
+  gap: 40px; 
+  margin-bottom: 10px;
+}
+
+.status-card {
+  background-color: #ffffff;
+  border-radius: 20px;
+  width: 115px;
+  height: 63px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.status-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #000000;
+  margin-bottom: 4px;
+}
+
+.status-value {
+  font-size: 13px;
+  font-weight: 600;
+  color: #000000;
+}
+
+.status-value.time {
+  color: #ff2727;
+  font-size: 15px;
+}
+
+.status-caption {
+  font-size: 13px;
+  color: #828282;
+  text-align: center;
+  margin: 0;
+}
+
+.auction-title-box {
+  width: 320px;
+  margin: 0 auto; /* 아래 상태 박스와 간격만 유지 */
+  text-align: center;
+}
+
+.product-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: #000000;
+}
+
+.product-name {
+  font-size: 16px;
+  color: #000000;
+}
