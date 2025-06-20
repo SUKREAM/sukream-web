@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const PageWrapper = styled.div`
   padding: 20px 16px;
@@ -118,6 +119,7 @@ const categories = [
 ];
 
 const ProductAddPage = () => {
+  const navigate = useNavigate();
   const [form, setForm] = useState({
     title: "",
     description: "",
@@ -184,6 +186,7 @@ const ProductAddPage = () => {
 
       if (res.data.success) {
         alert("상품이 성공적으로 등록되었습니다.");
+        navigate("/main");
       } else {
         alert("등록 실패: " + res.data.errorMsg);
       }
