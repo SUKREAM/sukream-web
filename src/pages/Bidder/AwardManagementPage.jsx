@@ -38,11 +38,14 @@ const Description = styled.p`
 `;
 
 const AwardManagementPage = () => {
+  const token = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJqaXdvb0BnbWFpbC5jb20iLCJuYW1lIjoi7KeA7JqwIiwiaWF0IjoxNzUwMzk4NjY5LCJleHAiOjE3NTA0MDIyNjl9.Ns9wJj-1MbHFM7KKA0znz_dBJOmfIxvxOu95zkqA1ow";
+  const productId = 144; // 실제 조회할 상품 ID로 대체
+
   return (
     <PageWrapper>
       <AuctionImage />
       <AuctionStatusBox />
-      <BidderList />
+      <BidderList productId={productId} token={token} />
     </PageWrapper>
   );
 };
