@@ -7,65 +7,128 @@ const PageWrapper = styled.div`
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-`;
-
-const Main = styled.main`
-  flex: 1;
-  padding: 16px;
-  max-width: 340px;
-  margin: 0 auto;
-`;
-
-const DetailItem = styled.div`
-  width: 90%;
-  margin-bottom: 12px;
-  padding: 12px;
   background: #fff;
-  border-radius: 6px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  font-family: "Noto Sans KR", sans-serif;
+  color: #333;
+`;
+
+const Main = styled.div`
+  flex: 1;
+  padding: 2px 16px;
+  max-width: 400px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`;
+
+const TitleInput = styled.input`
+  font-weight: 700;
+  font-size: 1.4rem;
+  width: 100%;
+  border: none;
+  border-bottom: 1px solid #ccc;
+  margin-bottom: 8px;
+`;
+
+const Subtitle = styled.div`
+  font-size: 0.8rem;
+  color: #999;
+  margin-bottom: 10px;
+`;
+
+const ImageWrapper = styled.div`
+  width: 100%;
+  height: 260px;
+  margin-bottom: 10px;
+  border-radius: 10px;
+  overflow: hidden;
+  background: #f5f5f5;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+  }
+`;
+
+const Seller = styled.div`
+  font-size: 0.9rem;
+  color: #666;
+  margin-bottom: 10px;
+  text-align: right;
+`;
+
+const Textarea = styled.textarea`
+  width: 95%;
+  min-height: 60px;
+  font-size: 1rem;
+  color: #666;
+  margin-bottom: 16px;
+  resize: none;
 `;
 
 const Input = styled.input`
-  width: 100%;
-  margin-top: 4px;
-  padding: 6px;
-`;
-
-const TextArea = styled.textarea`
-  width: 100%;
-  margin-top: 4px;
-  padding: 6px;
-`;
-
-const Button = styled.button.attrs((props) => ({
-  "data-danger": props.danger || undefined,
-}))`
-  margin-right: 8px;
-  padding: 6px 12px;
-  border: none;
+  width: 90%;
+  font-size: 1rem;
+  padding: 6px 10px;
+  margin-bottom: 12px;
+  border: 1px solid #ccc;
   border-radius: 4px;
-  background: ${({ danger }) => (danger ? "#dc3545" : "#007bff")};
+`;
+
+const InfoRow = styled.div`
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+
+  strong {
+    font-weight: 600;
+    color: #555;
+  }
+`;
+
+const ButtonRow = styled.div`
+  margin-top: 24px;
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+`;
+
+const ActionButton = styled.button`
+  background-color: ${(props) => (props.danger ? "#dc3545" : "#007bff")};
+  border: none;
   color: white;
+  font-weight: 600;
+  font-size: 0.95rem;
+  border-radius: 5px;
+  padding: 10px 0;
+  width: 150px;
   cursor: pointer;
+
+  &:hover {
+    background-color: ${(props) => (props.danger ? "#bb2d3b" : "#0056b3")};
+  }
 `;
 
 const SellerProductDetailPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-
   const [product, setProduct] = useState(null);
-  const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState({
     title: "",
     description: "",
-    minPrice: 0,
-    maxPrice: 0,
-    bidUnit: 0,
-    chatLink: "",
+    minPrice: "",
+    maxPrice: "",
     category: "",
+    bidUnit: "",
     deadline: "",
-    status: "open",
-    image: "", // base64
+    chatLink: "",
+    status: "",
+    image: null,
   });
 
   useEffect(() => {
@@ -73,106 +136,75 @@ const SellerProductDetailPage = () => {
       .get(`http://localhost:8080/api/product/${id}`)
       .then((res) => {
         if (res.data.success) {
-          const data = res.data.data;
-
-          const statusMap = {
-            "진행 중": "open",
-            "마감 됨": "closed",
-            "낙찰 완료": "awarded",
-          };
-
-          setProduct(data);
+          const p = res.data.data;
+          setProduct(p);
           setFormData({
-            title: data.title,
-            description: data.description,
-            minPrice: data.minPrice,
-            maxPrice: data.maxPrice,
-            bidUnit: data.bidUnit,
-            chatLink: data.chatLink,
-            category: data.category,
-            deadline: data.deadline,
-            status: statusMap[data.status] || data.status, // 수정!!
-            image: data.image || "", // base64 유지
+            title: p.title,
+            description: p.description,
+            minPrice: p.minPrice,
+            maxPrice: p.maxPrice,
+            category: p.category,
+            bidUnit: p.bidUnit,
+            deadline: p.deadline.slice(0, 16),
+            chatLink: p.chatLink,
+            status: p.status,
+            image: null,
           });
         } else {
-          console.error("조회 실패:", res.data.errorMsg);
+          console.error("상품 조회 실패:", res.data.errorMsg);
         }
       })
       .catch((err) => {
-        console.error("조회 오류:", err);
+        console.error("API 요청 중 오류 발생:", err);
       });
   }, [id]);
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+  const handleChange = (e) => {
+    const { name, value, files } = e.target;
+    setFormData({
+      ...formData,
+      [name]: files ? files[0] : value,
+    });
   };
 
-  const handleFileChange = (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      const base64String = reader.result.split(",")[1];
-      setFormData((prev) => ({ ...prev, image: base64String }));
-    };
-    reader.readAsDataURL(file);
-  };
-
-  const handleStatusChange = (e) => {
-    setFormData((prev) => ({ ...prev, status: e.target.value }));
-  };
-
-  const toLocalDateTime = (isoString) => {
-    const date = new Date(isoString);
-    return date.toISOString().slice(0, 16);
-  };
-
-  const handleUpdate = async () => {
-    localStorage.setItem(
-      "accessToken",
-      "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzb2plb25nQGdtYWlsLmNvbSIsIm5hbWUiOiLshozsoJUiLCJpYXQiOjE3NTAzOTQxNTgsImV4cCI6MTc1MDM5Nzc1OH0.dObuTzbxLAITkc9rCk2E6gMgR706MvyC-11x52TQpLQ"
-    );
+  const handleSave = () => {
     const token = localStorage.getItem("accessToken");
+    const updatedData = { ...formData };
 
-    try {
-      const payload = {
-        ...formData,
-        minPrice: parseInt(formData.minPrice),
-        maxPrice: parseInt(formData.maxPrice),
-        bidUnit: parseInt(formData.bidUnit),
-        deadline: new Date(formData.deadline).toISOString(),
+    const reader = new FileReader();
+    if (formData.image) {
+      reader.onloadend = () => {
+        updatedData.image = reader.result.split(",")[1];
+        patchProduct(updatedData, token);
       };
-
-      console.log("📦 PATCH 전송 payload:", payload);
-
-      const res = await axios.patch(
-        `http://localhost:8080/api/product/${id}`,
-        payload,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
-
-      if (res.data.success) {
-        alert("수정되었습니다.");
-        setIsEditing(false);
-        setProduct(res.data.data);
-      } else {
-        alert("수정 실패: " + res.data.errorMsg);
-      }
-    } catch (err) {
-      console.error("수정 오류:", err);
-      alert("오류가 발생했습니다.");
+      reader.readAsDataURL(formData.image);
+    } else {
+      updatedData.image = product.image;
+      patchProduct(updatedData, token);
     }
+  };
+
+  const patchProduct = (data, token) => {
+    axios
+      .patch(`http://localhost:8080/api/product/${id}`, data, {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+      .then((res) => {
+        if (res.data.success) {
+          alert("수정되었습니다.");
+          navigate("/products");
+        } else {
+          alert("수정 실패: " + res.data.errorMsg);
+        }
+      })
+      .catch((err) => {
+        console.error("수정 오류:", err);
+        alert("오류가 발생했습니다.");
+      });
   };
 
   const handleDelete = () => {
     const token = localStorage.getItem("accessToken");
-
     if (window.confirm("정말로 삭제하시겠습니까?")) {
       axios
         .delete(`http://localhost:8080/api/product/${id}`, {
@@ -193,164 +225,104 @@ const SellerProductDetailPage = () => {
     }
   };
 
-  if (!product) return <Main>상품 정보를 불러오는 중입니다...</Main>;
+  if (!product) {
+    return (
+      <p style={{ textAlign: "center", marginTop: 50 }}>
+        상품 정보를 불러오는 중입니다...
+      </p>
+    );
+  }
 
   return (
     <PageWrapper>
       <Main>
-        <h2>판매자 전용 상품 상세</h2>
+        <TitleInput
+          name="title"
+          value={formData.title}
+          onChange={handleChange}
+        />
+        <Subtitle>
+          등록일자 {new Date(product.createdAt).toLocaleDateString()}
+        </Subtitle>
 
-        {isEditing ? (
-          <>
-            <DetailItem>
-              <strong>제목:</strong>
-              <Input
-                name="title"
-                value={formData.title}
-                onChange={handleInputChange}
-              />
-            </DetailItem>
-            <DetailItem>
-              <strong>설명:</strong>
-              <TextArea
-                name="description"
-                rows="3"
-                value={formData.description}
-                onChange={handleInputChange}
-              />
-            </DetailItem>
-            <DetailItem>
-              <strong>최소 입찰가:</strong>
-              <Input
-                name="minPrice"
-                type="number"
-                value={formData.minPrice}
-                onChange={handleInputChange}
-              />
-            </DetailItem>
-            <DetailItem>
-              <strong>최대 입찰가:</strong>
-              <Input
-                name="maxPrice"
-                type="number"
-                value={formData.maxPrice}
-                onChange={handleInputChange}
-              />
-            </DetailItem>
-            <DetailItem>
-              <strong>입찰 단위:</strong>
-              <Input
-                name="bidUnit"
-                type="number"
-                value={formData.bidUnit}
-                onChange={handleInputChange}
-              />
-            </DetailItem>
-            <DetailItem>
-              <strong>카테고리:</strong>
-              <Input
-                name="category"
-                value={formData.category}
-                onChange={handleInputChange}
-              />
-            </DetailItem>
-            <DetailItem>
-              <strong>마감일:</strong>
-              <Input
-                name="deadline"
-                type="datetime-local"
-                value={toLocalDateTime(formData.deadline)}
-                onChange={handleInputChange}
-              />
-            </DetailItem>
-            <DetailItem>
-              <strong>상태:</strong>
-              <select value={formData.status} onChange={handleStatusChange}>
-                <option value="open">open</option>
-                <option value="closed">closed</option>
-                <option value="awarded">awarded</option>
-              </select>
-            </DetailItem>
-            <DetailItem>
-              <strong>채팅 링크:</strong>
-              <Input
-                name="chatLink"
-                value={formData.chatLink}
-                onChange={handleInputChange}
-              />
-            </DetailItem>
-            <DetailItem>
-              <strong>이미지:</strong>
-              <Input type="file" accept="image/*" onChange={handleFileChange} />
-              {formData.image && (
-                <img
-                  src={`data:image/png;base64,${formData.image}`}
-                  alt="업로드 미리보기"
-                  style={{ marginTop: "8px", maxWidth: "100%" }}
-                />
-              )}
-            </DetailItem>
+        <ImageWrapper>
+          {product.image ? (
+            <img
+              src={`data:image/png;base64,${product.image}`}
+              alt={product.title}
+            />
+          ) : (
+            "이미지가 없습니다."
+          )}
+        </ImageWrapper>
 
-            <Button onClick={handleUpdate}>수정 완료</Button>
-            <Button danger onClick={() => setIsEditing(false)}>
-              취소
-            </Button>
-          </>
-        ) : (
-          <>
-            <DetailItem>
-              <strong>제목:</strong> {product.title}
-            </DetailItem>
-            <DetailItem>
-              <strong>설명:</strong> {product.description}
-            </DetailItem>
-            <DetailItem>
-              <strong>최소 입찰가:</strong> {product.minPrice.toLocaleString()}{" "}
-              원
-            </DetailItem>
-            <DetailItem>
-              <strong>최대 입찰가:</strong> {product.maxPrice.toLocaleString()}{" "}
-              원
-            </DetailItem>
-            <DetailItem>
-              <strong>입찰 단위:</strong> {product.bidUnit.toLocaleString()} 원
-            </DetailItem>
-            <DetailItem>
-              <strong>카테고리:</strong> {product.category}
-            </DetailItem>
-            <DetailItem>
-              <strong>마감일:</strong>{" "}
-              {new Date(product.deadline).toLocaleString()}
-            </DetailItem>
-            <DetailItem>
-              <strong>상태:</strong> {product.status}
-            </DetailItem>
-            <DetailItem>
-              <strong>채팅 링크:</strong>{" "}
-              <a href={product.chatLink} target="_blank" rel="noreferrer">
-                {product.chatLink}
-              </a>
-            </DetailItem>
-            <DetailItem>
-              <strong>이미지:</strong>
-              <br />
-              {product.image ? (
-                <img
-                  src={`data:image/png;base64,${product.image}`}
-                  alt="상품 이미지"
-                  style={{ maxWidth: "100%", borderRadius: "6px" }}
-                />
-              ) : (
-                <span>이미지가 없습니다.</span>
-              )}
-            </DetailItem>
+        <Input
+          name="image"
+          type="file"
+          accept="image/*"
+          onChange={handleChange}
+        />
 
-            <Button onClick={() => setIsEditing(true)}>수정</Button>
-            <Button danger onClick={handleDelete}>
-              삭제
-            </Button>
-          </>
-        )}
+        <Seller>판매자 {product.sellerName}</Seller>
+
+        <Textarea
+          name="description"
+          value={formData.description}
+          onChange={handleChange}
+        />
+
+        <Input
+          name="chatLink"
+          value={formData.chatLink}
+          onChange={handleChange}
+        />
+        <InfoRow>
+          <strong>경매 번호</strong>
+          <span>{product.auctionNum}</span>
+        </InfoRow>
+
+        <InfoRow>
+          <strong>입찰 수: </strong>
+          <span>{product.bidCount}</span>
+        </InfoRow>
+
+        <Input name="status" value={formData.status} onChange={handleChange} />
+
+        <Input
+          name="minPrice"
+          type="number"
+          value={formData.minPrice}
+          onChange={handleChange}
+        />
+        <Input
+          name="maxPrice"
+          type="number"
+          value={formData.maxPrice}
+          onChange={handleChange}
+        />
+        <Input
+          name="category"
+          value={formData.category}
+          onChange={handleChange}
+        />
+        <Input
+          name="bidUnit"
+          type="number"
+          value={formData.bidUnit}
+          onChange={handleChange}
+        />
+        <Input
+          name="deadline"
+          type="datetime-local"
+          value={formData.deadline}
+          onChange={handleChange}
+        />
+        <ButtonRow>
+          <ActionButton onClick={handleSave}>수정</ActionButton>
+          <ActionButton danger onClick={handleDelete}>
+            삭제
+          </ActionButton>
+        </ButtonRow>
       </Main>
     </PageWrapper>
   );
