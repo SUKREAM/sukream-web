@@ -2,13 +2,18 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import ReviewList from "./components/ReviewList";
 
+const PageWrapper = styled.div`
+  min-height: 100vh;
+  padding-bottom: 50px; 
+`;
+
 const Container = styled.div`
-  max-width: 480px;
-  margin: 40px auto;
-  padding: 24px 16px;
+  max-width: 350px;
+  margin: 20px auto;
+  padding: 16px 12px;
   background: #fff;
-  border-radius: 16px;
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 `;
 
 const Title = styled.h2`
@@ -32,9 +37,28 @@ const EmptyMessage = styled.p`
   color: #888;
 `;
 
+const StatsWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #ff4d4f;
+  margin-bottom: 24px;
+`;
+
+const StatItem = styled.div`
+  color: #555;
+  font-weight: 600;
+  font-size: 1.2rem;
+`;
+
+
+
 const ReviewPage = () => {
   const [reviews, setReviews] = useState([]);
   const [avgRating, setAvgRating] = useState(0);
+  const [reviewCount, setReviewCount] = useState(0);
   const [userName, setUserName] = useState("");
 
   useEffect(() => {
@@ -49,7 +73,7 @@ const ReviewPage = () => {
           headers: {
             "Content-Type": "application/json",
             "Accept": "application/hal+json",
-            "Authorization": `Bearer ${token}`,  // 이 부분 확인 필요
+            "Authorization": `Bearer ${token}`, 
           },
         });
         if (!response.ok) throw new Error("리뷰 조회 실패");
@@ -57,6 +81,7 @@ const ReviewPage = () => {
         const data = await response.json();
         setReviews(data.reviews);
         setAvgRating(data.averageRating);
+        setReviewCount(data.reviewCount); 
         setUserName(data.userName || "사용자");
       } catch (error) {
         console.error(error);
@@ -67,17 +92,22 @@ const ReviewPage = () => {
   }, []);
 
   return (
+    <PageWrapper>
     <Container>
       <Title>{userName}님의 리뷰</Title>
       {reviews.length > 0 ? (
-        <>
-          <AvgRating>평균 평점: {avgRating.toFixed(1)} / 5</AvgRating>
-          <ReviewList reviews={reviews} />
-        </>
+       <>
+        <StatsWrapper>
+           <StatItem>평균 평점: <span style={{color: "#ff4d4f"}}>{avgRating.toFixed(1)} / 5</span></StatItem>
+          <StatItem>거래내역: <span style={{color: "#ff4d4f"}}>{reviewCount}개</span></StatItem>
+        </StatsWrapper>
+        <ReviewList reviews={reviews} />
+     </>
       ) : (
         <EmptyMessage>리뷰가 없습니다.</EmptyMessage>
       )}
     </Container>
+    </PageWrapper>
   );
 };
 

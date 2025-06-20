@@ -5,6 +5,7 @@ import axios from "axios";
 
 const PageWrapper = styled.div`
   padding: 16px;
+  min-height: 100vh;
 `;
 
 const ItemCard = styled.div`
