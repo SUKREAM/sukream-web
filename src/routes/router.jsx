@@ -10,6 +10,7 @@ import OnBoardingPage from "../pages/OnBoardingPage";
 import ProductListPage from "../pages/Product/ProductListPage";
 import ProductDetailPage from "../pages/Product/ProductDetailPage";
 import ProductAddPage from "../pages/Product/ProductAddPage";
+import SellerProductDetailPage from "../pages/Product/SellerProductDetailPage";
 
 // Review 관련 import
 import ReviewPage from "../pages/Review/ReviewPage";
@@ -44,6 +45,7 @@ const router = createBrowserRouter([
       //특정 판매자 리뷰 조회 라우트
       { path: "/sellers/:userId/reviews", element: <SellerReviewPage />},
       { path: "products/add", element: <ProductAddPage /> },
+      { path: "products/seller/:id", element: <SellerProductDetailPage /> },
 
       //마이페이지 관련 라우트
       { path: "mypage", element: <MyPage /> },
