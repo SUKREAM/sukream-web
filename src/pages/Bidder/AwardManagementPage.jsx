@@ -38,13 +38,13 @@ const Description = styled.p`
 `;
 
 const AwardManagementPage = () => {
-  const token = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJqaXdvb0BnbWFpbC5jb20iLCJuYW1lIjoi7KeA7JqwIiwiaWF0IjoxNzUwMzk4NjY5LCJleHAiOjE3NTA0MDIyNjl9.Ns9wJj-1MbHFM7KKA0znz_dBJOmfIxvxOu95zkqA1ow";
+  const token = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJqaXdvb0BnbWFpbC5jb20iLCJuYW1lIjoi7KeA7JqwIiwiaWF0IjoxNzUwNDAyNDQ5LCJleHAiOjE3NTA0MDYwNDl9.FUezmdu4s7W_WHJoHMcOF0eFKFEN5eFa1L5fep0_wqg";
   const productId = 144; // 실제 조회할 상품 ID로 대체
 
   return (
     <PageWrapper>
       <AuctionImage />
-      <AuctionStatusBox />
+      <AuctionStatusBox productId={productId} token={token} />
       <BidderList productId={productId} token={token} />
     </PageWrapper>
   );
