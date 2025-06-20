@@ -2,7 +2,7 @@ import React from "react";
 import styled from "styled-components";
 
 const ItemWrapper = styled.div`
-  padding: 16px 0;
+  padding: 16px 12px;
   border-bottom: 1px solid #eee;
   &:last-child {
     border-bottom: none;
@@ -41,9 +41,9 @@ const Content = styled.p`
 
 // 품질평가 한글 변환 함수 (선택사항)
 const qualityMap = {
-  EXCELLENT: "우수",
-  AVERAGE: "보통",
-  POOR: "나쁨",
+  EXCELLENT: "훌륭해요",
+  AVERAGE: "보통이에요",
+  POOR: "생각보다 별로예요",
 };
 
 const ReviewItem = ({ review }) => {
