@@ -32,7 +32,7 @@ const ReviewWritePage = () => {
 
   const [submitted, setSubmitted] = useState(false);
 
-  const token = localStorage.getItem("accessToken");
+  const token = localStorage.getItem("jwt");
 
   const handleSubmit = async (data) => {
     try {

@@ -31,7 +31,7 @@ const SellHistoryPage = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const token = localStorage.getItem("accessToken"); 
+    const token = localStorage.getItem("jwt"); 
 
     axios
       .get("http://localhost:8080/api/mypage/sales", {

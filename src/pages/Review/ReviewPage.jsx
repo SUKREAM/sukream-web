@@ -63,7 +63,7 @@ const ReviewPage = () => {
 
   useEffect(() => {
 
-    const token = localStorage.getItem("accessToken");
+    const token = localStorage.getItem("jwt");
 
 
     async function fetchReviews() {
