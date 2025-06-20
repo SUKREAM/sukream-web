@@ -4,41 +4,45 @@ import "../styles/BidderList.css";
 
 export const BidderList = ({ productId, token }) => {
     const [bidders, setBidders] = useState([]);
+    const [awardedBidderId, setAwardedBidderId] = useState(null);
 
-    useEffect(() => {
-        const fetchBidders = async () => {
-            try {
-                const res = await axios.get(`/api/products/${productId}/bidders`, {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                });
-
-                if (res.data && res.data.success) {
-                    setBidders(res.data.data);
-                    console.log("입찰자 목록:", res.data.data);
-                } else {
-                    console.warn("API 요청 실패:", res.data.errorMsg);
-                }
-            } catch (error) {
-                console.error("입찰자 목록 불러오기 실패:", error);
+    // 입찰자 목록 불러오기
+    const fetchBidders = async () => {
+        try {
+            const res = await axios.get(`/api/products/${productId}/bidders`, {
+                headers: { Authorization: `Bearer ${token}` },
+            });
+            if (res.data && res.data.success) {
+                setBidders(res.data.data);
+                // 만약 낙찰자가 있으면 ID 저장
+                const awarded = res.data.data.find(b => b.awardedAt !== null);
+                if (awarded) setAwardedBidderId(awarded.bidderId);
+                else setAwardedBidderId(null);
             }
-        };
+        } catch (error) {
+            console.error(error);
+        }
+    };
 
-        fetchBidders();
+    // 컴포넌트가 처음 렌더링될 때 및 productId/token 변경 시 입찰자 목록 불러오기
+    useEffect(() => {
+        if (productId && token) {
+            fetchBidders();
+        }
     }, [productId, token]);
 
-
+    // 낙찰하기 API 호출
     const handleAward = async (bidderId) => {
         try {
-            const res = await axios.post(`/api/bidders/${bidderId}/award`, null, {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
-            });
+            const res = await axios.post(
+                `/api/products/${productId}/bidders/award/${bidderId}`,
+                null,
+                { headers: { Authorization: `Bearer ${token}` } }
+            );
             alert(res.data.errorMsg || "낙찰 완료!");
+            setAwardedBidderId(bidderId);
+            fetchBidders();
         } catch (error) {
-            console.error("낙찰 실패:", error);
             alert("낙찰에 실패했습니다.");
         }
     };
@@ -49,20 +53,29 @@ export const BidderList = ({ productId, token }) => {
                 <div className="overlap-wrapper">
                     <div className="overlap">
                         <div className="text-wrapper">입찰자 목록</div>
-                        {bidders.map(bidder => (
+                        {bidders.map((bidder) => (
                             <div key={bidder.bidderId} className="bidder-card">
                                 <div className="nickname">{bidder.nickname}</div>
                                 <div className="price">{bidder.price.toLocaleString()}원</div>
                                 <div className="submitted-ago">{bidder.submittedAgo}</div>
-                                <button
-                                    className="award-button"
-                                    onClick={() => handleAward(bidder.bidderId)}
-                                >
-                                    낙찰하기
-                                </button>
+                                {awardedBidderId ? (
+                                    <button
+                                        disabled
+                                        className={`award-button disabled ${awardedBidderId === bidder.bidderId ? "awarded" : "closed"
+                                            }`}
+                                    >
+                                        {awardedBidderId === bidder.bidderId ? "낙찰완료" : "낙찰마감"}
+                                    </button>
+                                ) : (
+                                    <button
+                                        className="award-button"
+                                        onClick={() => handleAward(bidder.bidderId)}
+                                    >
+                                        낙찰하기
+                                    </button>
+                                )}
                             </div>
                         ))}
-
                         <div className="rectangle-3" />
                     </div>
                 </div>
