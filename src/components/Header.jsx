@@ -8,7 +8,6 @@ import mypageImg from "../assets/images/myBtn.svg";
 const HeaderWrapper = styled.header`
   background: #ffffff;
   color: #fff;
-  padding: 12px 16px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -20,14 +19,15 @@ const Logo = styled(Link)`
 `;
 
 const LogoImg = styled.img`
-  height: 30px;
+  height: 27px;
 `;
 
 const IconButton = styled(Link)`
   display: inline-block;
-  width: 45px;
-  height: 45px;
+  width: 40px;
+  height: 40px;
   margin-left: 12px;
+  margin-top: 13px;
 
   img {
     width: 100%;
