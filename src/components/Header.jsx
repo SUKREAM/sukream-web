@@ -38,7 +38,7 @@ const IconButton = styled(Link)`
 
 const Header = () => (
   <HeaderWrapper>
-    <Logo to="/">
+    <Logo to="/main">
       <LogoImg src={logoImg} alt="SUKREAM Logo" />
     </Logo>
 
