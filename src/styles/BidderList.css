@@ -84,3 +84,14 @@
   align-items: center;
   justify-content: center;
 }
+
+.award-button.disabled.awarded {
+  background-color: #4caf50;
+  color: white;
+}
+
+.award-button.disabled.closed {
+  background-color: #a0a0a0;
+  color: white;
+  cursor: not-allowed;
+}
