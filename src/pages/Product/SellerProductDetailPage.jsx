@@ -226,7 +226,7 @@ const SellerProductDetailPage = () => {
       .then((res) => {
         if (res.data.success) {
           alert("수정되었습니다.");
-          navigate("/products");
+          navigate(-1);
         } else {
           alert("수정 실패: " + res.data.errorMsg);
         }
@@ -238,7 +238,7 @@ const SellerProductDetailPage = () => {
   };
 
   const handleDelete = () => {
-    const token = localStorage.getItem("accessToken");
+    const token = localStorage.getItem("jwt");
     if (window.confirm("정말로 삭제하시겠습니까?")) {
       axios
         .delete(`http://localhost:8080/api/product/${id}`, {
@@ -247,7 +247,7 @@ const SellerProductDetailPage = () => {
         .then((res) => {
           if (res.data.success) {
             alert("삭제되었습니다.");
-            navigate("/products");
+            navigate(-1);
           } else {
             alert("삭제 실패: " + res.data.errorMsg);
           }
