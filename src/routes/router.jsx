@@ -5,6 +5,7 @@ import OnBoardingPage from "../pages/OnBoardingPage";
 
 // User 관련 import
 import { SelfLoginPage } from "../pages/User/SelfLoginPage";
+import { SignUpPage } from "../pages/User/SignUpPage";
 
 // Product 관련 import
 import ProductListPage from "../pages/Product/ProductListPage";
@@ -41,6 +42,7 @@ const router = createBrowserRouter([
 
       // User
       { path: "login", element: <SelfLoginPage /> },
+      {path: "signup", element: <SignUpPage/>},
 
       // 리뷰 관련 라우트
       { path: "reviews", element: <ReviewPage /> }, // 리뷰 조회
