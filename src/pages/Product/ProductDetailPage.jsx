@@ -1,7 +1,214 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import axios from "axios";
+
+const ProductDetailPage = () => {
+  const { id } = useParams();
+  const [product, setProduct] = useState(null);
+  const [bidPrice, setBidPrice] = useState("");
+  const [timeLeft, setTimeLeft] = useState("");
+
+  // 남은 시간 계산 로직
+  const calculateTimeLeft = (deadline, status) => {
+    if (status === "낙찰 완료" || status === "마감 됨") {
+      return "0시간 0분 0초";
+    }
+    const now = new Date();
+    const end = new Date(deadline);
+    const diff = end - now;
+
+    if (diff <= 0) return "종료되었습니다.";
+
+    const hours = Math.floor(diff / (1000 * 60 * 60));
+    const minutes = Math.floor((diff / (1000 * 60)) % 60);
+    const seconds = Math.floor((diff / 1000) % 60);
+
+    return `${hours}시간 ${minutes}분 ${seconds}초`;
+  };
+
+  useEffect(() => {
+    let timer;
+    if (product?.deadline) {
+      setTimeLeft(calculateTimeLeft(product.deadline, product.status));
+      timer = setInterval(() => {
+        setTimeLeft(calculateTimeLeft(product.deadline, product.status));
+      }, 1000);
+    }
+    return () => clearInterval(timer);
+  }, [product]);
+
+  useEffect(() => {
+    axios
+      .get(`http://localhost:8080/api/product/${id}`)
+      .then((res) => {
+        if (res.data.success) {
+          setProduct(res.data.data);
+          setBidPrice(res.data.data.currentHighestPrice);
+        } else {
+          console.error("상품 조회 실패:", res.data.errorMsg);
+        }
+      })
+      .catch((err) => {
+        console.error("요청 중 오류 발생:", err);
+      });
+  }, [id]);
+
+  const handleBidChange = (amount) => {
+    const minBid = product.currentHighestPrice + product.bidUnit;
+    const newBid = parseInt(bidPrice || 0) + amount;
+
+    if (newBid >= minBid) {
+      setBidPrice(newBid);
+    }
+  };
+
+  if (!product) {
+    return (
+      <p style={{ textAlign: "center", marginTop: 50 }}>
+        상품 정보를 불러오는 중입니다...
+      </p>
+    );
+  }
+
+  // 입찰하기
+  const handleBidSubmit = () => {
+    const token = localStorage.getItem("jwt");
+
+    // 임시. 일단은 "익명"으로 저장되게
+    // 백에서 유저 로그인 한 name받아와서 넣는 거로 수정하셈
+    const nickname = "익명";
+
+    if (!token) {
+      alert("로그인이 필요합니다.");
+      return;
+    }
+    const data = {
+      price: bidPrice,
+      nickname: nickname,
+    };
+
+    axios
+      .post(`http://localhost:8080/api/products/${id}/bidders`, data, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      })
+      .then((res) => {
+        if (res.data.success) {
+          alert("입찰이 완료되었습니다.");
+
+          setProduct((prev) => ({
+            ...prev,
+            currentHighestPrice: bidPrice,
+            bidCount: prev.bidCount + 1,
+          }));
+        } else {
+          alert("입찰 실패: " + res.data.errorMsg);
+        }
+      })
+      .catch((err) => {
+        console.error("입찰 오류:", err);
+        alert("입찰 중 오류가 발생했습니다.");
+      });
+  };
+
+  return (
+    <PageWrapper>
+      <Main>
+        <TitleRow>
+          <Title>{product.title}</Title>
+          <Subtitle>
+            등록일자 {new Date(product.createdAt).toLocaleDateString()}
+          </Subtitle>
+        </TitleRow>
+
+        <ImageWrapper>
+          {product.image ? (
+            <img
+              src={`data:image/png;base64,${product.image}`}
+              alt={product.title}
+            />
+          ) : (
+            "이미지가 없습니다."
+          )}
+        </ImageWrapper>
+
+        <PriceWrapper>
+          <span className="label">현재 최고가</span>
+          <span className="price">
+            {product.currentHighestPrice.toLocaleString()}원
+          </span>
+        </PriceWrapper>
+
+        <Seller>판매자 {product.sellerName}</Seller>
+
+        <Description>{product.description}</Description>
+
+        <OpenLink>오픈채팅방 링크: {product.chatLink} </OpenLink>
+
+        <InfoRow>
+          <strong>남은 시간</strong>
+          <span>{timeLeft}</span>
+        </InfoRow>
+
+        <InfoRow>
+          <strong>마감 일시</strong>
+          <span>{new Date(product.deadline).toLocaleString()}</span>
+        </InfoRow>
+
+        <InfoRow>
+          <strong>경매 상태</strong>
+          <span>{product.status}</span>
+        </InfoRow>
+
+        <InfoRow>
+          <strong>경매 번호</strong>
+          <span>{product.auctionNum}</span>
+        </InfoRow>
+
+        <InfoRow>
+          <strong>입찰 단위</strong>
+          <span>{product.bidUnit.toLocaleString()}원</span>
+        </InfoRow>
+
+        <InfoRow>
+          <strong>입찰 수</strong>
+          <span>{product.bidCount}</span>
+        </InfoRow>
+
+        <BidInputContainer>
+          <button
+            className="arrow"
+            onClick={() => handleBidChange(-product.bidUnit)}
+          >
+            -
+          </button>
+          <input type="number" value={bidPrice} readOnly />
+          <button
+            className="arrow"
+            onClick={() => handleBidChange(product.bidUnit)}
+          >
+            +
+          </button>
+          <button className="submit" onClick={() => handleBidSubmit()}>
+            입찰하기
+          </button>
+        </BidInputContainer>
+
+        <Link
+          to={`/sellers/${product.sellerId}/reviews`}
+          style={{ width: "100%", textDecoration: "none" }}
+        >
+          <SecondaryButton>판매자 후기 보기</SecondaryButton>
+        </Link>
+      </Main>
+    </PageWrapper>
+  );
+};
+
+export default ProductDetailPage;
 
 const PageWrapper = styled.div`
   display: flex;
@@ -97,7 +304,7 @@ const Description = styled.div`
   overflow-y: auto;
 `;
 
-const Link = styled.div`
+const OpenLink = styled.div`
   width: 90%;
   border-radius: 18px;
   border: 1px solid #ddd;
@@ -117,6 +324,11 @@ const InfoRow = styled.div`
   strong {
     font-weight: 600;
     color: #555;
+    width: 100px;
+  }
+
+  span {
+    text-align: right;
   }
 `;
 
@@ -152,7 +364,7 @@ const BidInputContainer = styled.div`
   }
 
   button.submit {
-    background-color: #ee4d2d;
+    background-color: #f76059;
     border: none;
     color: white;
     font-weight: 700;
@@ -164,7 +376,7 @@ const BidInputContainer = styled.div`
     flex-shrink: 0;
 
     &:hover {
-      background-color: #d43d1d;
+      background-color: #e93b32;
     }
   }
 `;
@@ -176,7 +388,7 @@ const SecondaryButton = styled.button`
   font-weight: 600;
   font-size: 1rem;
   border-radius: 5px;
-  padding: 10px 0;
+  padding: 15px 0;
   margin-top: 16px;
   width: 100%;
   cursor: pointer;
@@ -185,153 +397,3 @@ const SecondaryButton = styled.button`
     background-color: #ddd;
   }
 `;
-
-const ProductDetailPage = () => {
-  const { id } = useParams();
-  const [product, setProduct] = useState(null);
-  const [bidPrice, setBidPrice] = useState("");
-  const [timeLeft, setTimeLeft] = useState("");
-
-  // 남은 시간 계산 로직
-  const calculateTimeLeft = (deadline) => {
-    const now = new Date();
-    const end = new Date(deadline);
-    const diff = end - now;
-
-    if (diff <= 0) return "종료되었습니다.";
-
-    const hours = Math.floor(diff / (1000 * 60 * 60));
-    const minutes = Math.floor((diff / (1000 * 60)) % 60);
-    const seconds = Math.floor((diff / 1000) % 60);
-
-    return `${hours}시간 ${minutes}분 ${seconds}초`;
-  };
-
-  // 타이머
-  useEffect(() => {
-    let timer;
-    if (product?.deadline) {
-      setTimeLeft(calculateTimeLeft(product.deadline));
-      timer = setInterval(() => {
-        setTimeLeft(calculateTimeLeft(product.deadline));
-      }, 1000);
-    }
-    return () => clearInterval(timer);
-  }, [product]);
-
-  useEffect(() => {
-    axios
-      .get(`http://localhost:8080/api/product/${id}`)
-      .then((res) => {
-        if (res.data.success) {
-          setProduct(res.data.data);
-          setBidPrice(res.data.data.currentHighestPrice);
-        } else {
-          console.error("상품 조회 실패:", res.data.errorMsg);
-        }
-      })
-      .catch((err) => {
-        console.error("API 요청 중 오류 발생:", err);
-      });
-  }, [id]);
-
-  const handleBidChange = (amount) => {
-    const minBid = product.currentHighestPrice + product.bidUnit;
-    const newBid = parseInt(bidPrice || 0) + amount;
-
-    if (newBid >= minBid) {
-      setBidPrice(newBid);
-    }
-  };
-
-  if (!product) {
-    return (
-      <p style={{ textAlign: "center", marginTop: 50 }}>
-        상품 정보를 불러오는 중입니다...
-      </p>
-    );
-  }
-
-  return (
-    <PageWrapper>
-      <Main>
-        <TitleRow>
-          <Title>{product.title}</Title>
-          <Subtitle>
-            등록일자 {new Date(product.createdAt).toLocaleDateString()}
-          </Subtitle>
-        </TitleRow>
-
-        <ImageWrapper>
-          {product.image ? (
-            <img
-              src={`data:image/png;base64,${product.image}`}
-              alt={product.title}
-            />
-          ) : (
-            "이미지가 없습니다."
-          )}
-        </ImageWrapper>
-
-        <PriceWrapper>
-          <span className="label">현재 최고가</span>
-          <span className="price">
-            {product.currentHighestPrice.toLocaleString()}원
-          </span>
-        </PriceWrapper>
-
-        <Seller>판매자 {product.sellerName}</Seller>
-
-        <Description>{product.description}</Description>
-
-        <Link>오픈채팅방 링크: {product.chatLink} </Link>
-
-        <InfoRow>
-          <strong>남은 시간</strong>
-          <span>{timeLeft}</span>
-        </InfoRow>
-
-        <InfoRow>
-          <strong>경매 상태</strong>
-          <span>{product.status}</span>
-        </InfoRow>
-
-        <InfoRow>
-          <strong>경매 번호</strong>
-          <span>{product.auctionNum}</span>
-        </InfoRow>
-
-        <InfoRow>
-          <strong>입찰 단위</strong>
-          <span>{product.bidUnit.toLocaleString()}원</span>
-        </InfoRow>
-
-        <InfoRow>
-          <strong>입찰 수</strong>
-          <span>{product.bidCount}</span>
-        </InfoRow>
-
-        <BidInputContainer>
-          <button
-            className="arrow"
-            onClick={() => handleBidChange(-product.bidUnit)}
-          >
-            -
-          </button>
-          <input type="number" value={bidPrice} readOnly />
-          <button
-            className="arrow"
-            onClick={() => handleBidChange(product.bidUnit)}
-          >
-            +
-          </button>
-          <button className="submit">입찰하기</button>
-        </BidInputContainer>
-
-        <SecondaryButton>판매자 후기 보기</SecondaryButton>
-      </Main>
-    </PageWrapper>
-  );
-};
-
-export default ProductDetailPage;
