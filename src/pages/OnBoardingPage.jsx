@@ -1,5 +1,6 @@
 import React from "react";
 import styled from "styled-components";
+import { LoginPage } from './User/LoginPage';
 
 const PageWrapper = styled.div`
   display: flex;
@@ -8,7 +9,7 @@ const PageWrapper = styled.div`
 `;
 
 const OnBoardingPage = () => {
-  return <PageWrapper>로그인 회원가입 버튼</PageWrapper>;
+  return <PageWrapper><LoginPage/></PageWrapper>;
 };
 
 export default OnBoardingPage;

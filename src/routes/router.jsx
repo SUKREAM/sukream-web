@@ -18,11 +18,11 @@ import ReviewWritePage from "../pages/Review/ReviewWritePage";
 
 // MyPage 관련 Import
 import MyPage from "../pages/MyPage/MyPage";
-import BuyHistoryPage from "../pages/MyPage/BuyHistoryPage";
-import SellHistoryPage from "../pages/MyPage/SellHistoryPage";
 
 // Bidder 관련 import
 import AwardManagementPage from "../pages/Bidder/AwardManagementPage";
+import BuyHistoryPage from "../pages/MyPage/BuyHistoryPage";
+import SellHistoryPage from "../pages/MyPage/SellHistoryPage";
 
 const router = createBrowserRouter([
   {
@@ -36,15 +36,20 @@ const router = createBrowserRouter([
       { path: "main", element: <MainPage /> },
       { path: "products", element: <ProductListPage /> },
       { path: "products/:id", element: <ProductDetailPage /> },
+      { path: "search", element: <MainPage /> },
+
+      // 리뷰 관련 라우트
+      { path: "reviews", element: <ReviewPage /> },           // 리뷰 조회
+      { path: "reviews/write/:productId", element: <ReviewWritePage /> }, // 리뷰 작성회 페이지
+      
       { path: "products/add", element: <ProductAddPage /> },
       { path: "products/seller/:id", element: <SellerProductDetailPage /> },
 
       { path: "mypage", element: <MyPage /> },
       { path: "mypage/buy", element: <BuyHistoryPage /> },
       { path: "mypage/sell", element: <SellHistoryPage /> },
-      // 리뷰 관련 라우트
-      { path: "reviews", element: <ReviewPage /> }, // 리뷰 조회
-      { path: "reviews/write/:productId", element: <ReviewWritePage /> }, // 리뷰 작성
+      
+       // 경매 관련 라우트
       { path: "award-management", element: <AwardManagementPage /> },
     ],
   },
