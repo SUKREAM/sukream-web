@@ -14,6 +14,7 @@ import ProductAddPage from "../pages/Product/ProductAddPage";
 // Review 관련 import
 import ReviewPage from "../pages/Review/ReviewPage";
 import ReviewWritePage from "../pages/Review/ReviewWritePage";
+import SellerReviewPage from "../pages/Review/SellerReviewPage";
 
 // MyPage 관련 Import
 import MyPage from "../pages/MyPage/MyPage";
@@ -40,9 +41,11 @@ const router = createBrowserRouter([
       // 리뷰 관련 라우트
       { path: "reviews", element: <ReviewPage /> },           // 리뷰 조회
       { path: "reviews/write/:productId", element: <ReviewWritePage /> }, // 리뷰 작성회 페이지
-      
+      //특정 판매자 리뷰 조회 라우트
+      { path: "/sellers/:userId/reviews", element: <SellerReviewPage />},
       { path: "products/add", element: <ProductAddPage /> },
 
+      //마이페이지 관련 라우트
       { path: "mypage", element: <MyPage /> },
       { path: "mypage/buy", element: <BuyHistoryPage /> },
       { path: "mypage/sell", element: <SellHistoryPage /> },
