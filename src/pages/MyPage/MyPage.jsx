@@ -32,6 +32,7 @@ const MyPage = () => {
     <PageWrapper>
       <h2>마이페이지</h2>
       <MenuList>
+      <MenuItem onClick={() => navigate("/products/add")}>상품 등록하기</MenuItem>
         <MenuItem onClick={() => navigate("/mypage/buy")}>구매 내역 확인</MenuItem>
         <MenuItem onClick={() => navigate("/mypage/sell")}>판매 내역 확인</MenuItem>
         <MenuItem onClick={() => navigate("/reviews")}>받은 후기 보기</MenuItem>

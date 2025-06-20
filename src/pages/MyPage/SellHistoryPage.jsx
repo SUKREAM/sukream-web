@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import axios from "axios";
 
 const PageWrapper = styled.div`
   padding: 20px;
   min-height: 100vh;
-
 `;
 
 const DateGroup = styled.div`
@@ -75,6 +74,9 @@ const ProductName = styled.p`
 
 const ButtonGroup = styled.div`
   margin-top: 12px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
 `;
 
 const ActionButton = styled.button`
@@ -86,10 +88,25 @@ const ActionButton = styled.button`
   font-weight: 600;
   cursor: pointer;
   transition: background-color 0.3s ease;
-  width: 140px;
+  width: fit-content;
 
   &:hover {
     background-color: #0f4a8c;
+  }
+`;
+
+const LinkButton = styled(Link)`
+  background-color: #888;
+  padding: 10px 14px;
+  border-radius: 8px;
+  color: white;
+  font-weight: 600;
+  text-decoration: none;
+  display: inline-block;
+  transition: background-color 0.3s ease;
+
+  &:hover {
+    background-color: #555;
   }
 `;
 
@@ -145,7 +162,6 @@ const SellHistoryPage = () => {
   }, []);
 
   const groupedItems = groupItemsByDate(items);
-  // 날짜 키를 최신순 정렬
   const sortedDates = Object.keys(groupedItems).sort(
     (a, b) => new Date(b) - new Date(a)
   );
@@ -177,18 +193,26 @@ const SellHistoryPage = () => {
                 <ButtonGroup>
                   {item.status === "OPEN" && (
                     <ActionButton
-                      onClick={() => navigate(`/award-management/${item.productId}`)}
+                      onClick={() =>
+                        navigate(`/award-management/${item.productId}`)
+                      }
                     >
                       입찰 요청 보기
                     </ActionButton>
                   )}
                   {item.status === "AWARDED" && (
                     <ActionButton
-                      onClick={() => navigate(`/reviews?productId=${item.productId}`)}
+                      onClick={() =>
+                        navigate(`/reviews?productId=${item.productId}`)
+                      }
                     >
                       받은 후기 보기
                     </ActionButton>
                   )}
+                  {/* 상세 페이지로 이동 */}
+                  <LinkButton to={`/products/seller/${item.productId}`}>
+                    판매자 페이지로 이동 
+                  </LinkButton>
                 </ButtonGroup>
               </InfoSection>
             </ItemCard>
