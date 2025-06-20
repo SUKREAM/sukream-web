@@ -47,7 +47,7 @@ const shapeStyles = {
 const typeStyles = {
 	primary: css`
 		color: #fff;
-		background: #f06292;
+		background: #F76059;
 		border: 1.5px solid #f06292;
     `,
 
@@ -87,7 +87,7 @@ const socialStyles = {
     border: 1px solid #ddd;
     `,
     email: css`
-    background: #333;
+    background: #F76059;
     color: #fff;
     border: none;
     `,

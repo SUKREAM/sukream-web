@@ -3,6 +3,12 @@ import { useNavigate } from 'react-router-dom';
 import { useOAuthVerification } from './hooks/useOAuthVerification';
 import BasicButton from '../../components/Button'
 import Container from '../../components/Container/Container';
+import sukreamIcon from '../../assets/images/sukreamIcon.svg';
+import sukreamTitle from '../../assets/images/SUKREAM.svg';
+import naver from '../../assets/images/naver.svg';
+import kakao from '../../assets/images/kakao.svg';
+
+import styled from 'styled-components';
 
 export const LoginPage = () => {
   const navigate = useNavigate();
@@ -27,15 +33,22 @@ export const LoginPage = () => {
   const handleSelfLogin = () => navigate('/login');
 
   return (
-    <Container center={true} title='SUKREAM'>
-      {/* <Image src="/images/cream.png" alt="슈크림" /> */}
+    <Container center={true} title=''>
+      <img src={sukreamIcon} alt="Sukream" />
+      <img
+      src={sukreamTitle}
+      alt="SukreamTitle"
+      width="50%"
+      style={{ display: 'block', margin: '0 auto', padding: '0 0 100px 0' }}
+      /> 
+
       <BasicButton size="full" social="kakao" shape='square' onClick={() => handleOAuth('kakao')}>
-      {/* <img src="/icons/kakao.svg" alt="카카오" width="20" /> */}
+      <img src={kakao} alt="카카오" width="20" />
       카카오로 시작하기
       </BasicButton>
 
       <BasicButton size="full" social="naver" shape='square' onClick={() => handleOAuth('naver')} >
-      {/* <img src="/icons/naver.svg" alt="네이버" width="20" /> */}
+      <img src={naver} alt="네이버" width="20" />
       네이버로 시작하기
       </BasicButton>
 
