@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import styled from "styled-components";
 import { useParams, useNavigate } from "react-router-dom";
-import axios from "axios";
+import { axiosInstance } from "../../axios/axiosInstance";
 
 const statusMap = {
   open: "진행 중",
@@ -14,125 +14,6 @@ const reverseStatusMap = {
   "종료 됨": "closed",
   "낙찰 완료": "awarded",
 };
-
-const PageWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-  background: #fff;
-  font-family: "Noto Sans KR", sans-serif;
-  color: #333;
-`;
-
-const Main = styled.div`
-  flex: 1;
-  padding: 2px 16px;
-  max-width: 400px;
-  margin: 0 auto;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-`;
-
-const TitleInput = styled.input`
-  font-weight: 700;
-  font-size: 1.4rem;
-  width: 100%;
-  border: none;
-  border-bottom: 1px solid #ccc;
-  margin-bottom: 8px;
-`;
-
-const Subtitle = styled.div`
-  font-size: 0.8rem;
-  color: #999;
-  margin-bottom: 10px;
-`;
-
-const ImageWrapper = styled.div`
-  width: 100%;
-  height: 260px;
-  margin-bottom: 10px;
-  border-radius: 10px;
-  overflow: hidden;
-  background: #f5f5f5;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  img {
-    max-width: 100%;
-    max-height: 100%;
-    object-fit: contain;
-  }
-`;
-
-const Seller = styled.div`
-  font-size: 0.9rem;
-  color: #666;
-  margin-bottom: 10px;
-  text-align: right;
-`;
-
-const Textarea = styled.textarea`
-  width: 95%;
-  min-height: 60px;
-  font-size: 1rem;
-  color: #666;
-  margin-bottom: 16px;
-  resize: none;
-`;
-
-const Input = styled.input`
-  width: 90%;
-  font-size: 1rem;
-  padding: 6px 10px;
-  margin-bottom: 12px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-`;
-
-const Select = styled.select`
-  width: 90%;
-  font-size: 1rem;
-  padding: 6px 10px;
-  margin-bottom: 12px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-`;
-
-const InfoRow = styled.div`
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 10px;
-
-  strong {
-    font-weight: 600;
-    color: #555;
-  }
-  span {
-    text-align: right;
-  }
-`;
-
-const ButtonRow = styled.div`
-  margin-top: 24px;
-  display: flex;
-  justify-content: space-between;
-  gap: 10px;
-`;
-
-const ActionButton = styled.button`
-  background-color: #f76059;
-  border: none;
-  color: white;
-  font-weight: 400;
-  font-size: 0.95rem;
-  border-radius: 5px;
-  padding: 12px 0;
-  width: 110px;
-  cursor: pointer;
-`;
 
 const categories = [
   "전체",
@@ -148,7 +29,10 @@ const categories = [
 const SellerProductDetailPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const imageInputRef = useRef(null);
+
   const [product, setProduct] = useState(null);
+  const [imagePreview, setImagePreview] = useState(null);
   const [formData, setFormData] = useState({
     title: "",
     description: "",
@@ -163,7 +47,7 @@ const SellerProductDetailPage = () => {
   });
 
   useEffect(() => {
-    axios
+    axiosInstance
       .get(`http://localhost:8080/api/product/${id}`)
       .then((res) => {
         if (res.data.success) {
@@ -178,7 +62,7 @@ const SellerProductDetailPage = () => {
             bidUnit: p.bidUnit,
             deadline: p.deadline.slice(0, 16),
             chatLink: p.chatLink,
-            status: statusMap[p.status],
+            status: statusMap[p.status] ?? "진행 중",
             image: null,
           });
         } else {
@@ -190,6 +74,25 @@ const SellerProductDetailPage = () => {
       });
   }, [id]);
 
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setImagePreview(reader.result);
+      setFormData((prev) => ({
+        ...prev,
+        image: file,
+      }));
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const handleImageClick = () => {
+    imageInputRef.current?.click();
+  };
+
   const handleChange = (e) => {
     const { name, value, files } = e.target;
     setFormData({
@@ -199,30 +102,29 @@ const SellerProductDetailPage = () => {
   };
 
   const handleSave = () => {
-    const token = localStorage.getItem("jwt");
     const updatedData = {
       ...formData,
       status: reverseStatusMap[formData.status],
+      deadline: new Date(formData.deadline).toISOString(),
     };
 
-    const reader = new FileReader();
-    if (formData.image) {
+    if (formData.image instanceof File) {
+      const reader = new FileReader();
       reader.onloadend = () => {
         updatedData.image = reader.result.split(",")[1];
-        patchProduct(updatedData, token);
+        patchProduct(updatedData);
       };
       reader.readAsDataURL(formData.image);
     } else {
       updatedData.image = product.image;
-      patchProduct(updatedData, token);
+      patchProduct(updatedData);
     }
   };
 
-  const patchProduct = (data, token) => {
-    axios
-      .patch(`http://localhost:8080/api/product/${id}`, data, {
-        headers: { Authorization: `Bearer ${token}` },
-      })
+  const patchProduct = (data) => {
+    console.log("전송 데이터:", data);
+    axiosInstance
+      .patch(`http://localhost:8080/api/product/${id}`, data)
       .then((res) => {
         if (res.data.success) {
           alert("수정되었습니다.");
@@ -238,12 +140,9 @@ const SellerProductDetailPage = () => {
   };
 
   const handleDelete = () => {
-    const token = localStorage.getItem("jwt");
     if (window.confirm("정말로 삭제하시겠습니까?")) {
-      axios
-        .delete(`http://localhost:8080/api/product/${id}`, {
-          headers: { Authorization: `Bearer ${token}` },
-        })
+      axiosInstance
+        .delete(`http://localhost:8080/api/product/${id}`)
         .then((res) => {
           if (res.data.success) {
             alert("삭제되었습니다.");
@@ -270,17 +169,19 @@ const SellerProductDetailPage = () => {
   return (
     <PageWrapper>
       <Main>
+        <Subtitle>
+          등록일자 {new Date(product.createdAt).toLocaleDateString()}
+        </Subtitle>
+        <Seller>판매자 {product.sellerName}</Seller>
         <TitleInput
           name="title"
           value={formData.title}
           onChange={handleChange}
         />
-        <Subtitle>
-          등록일자 {new Date(product.createdAt).toLocaleDateString()}
-        </Subtitle>
-
-        <ImageWrapper>
-          {product.image ? (
+        <ImageWrapper onClick={handleImageClick} style={{ cursor: "pointer" }}>
+          {imagePreview ? (
+            <img src={imagePreview} alt="미리보기" />
+          ) : product.image ? (
             <img
               src={`data:image/png;base64,${product.image}`}
               alt={product.title}
@@ -288,29 +189,25 @@ const SellerProductDetailPage = () => {
           ) : (
             "이미지가 없습니다."
           )}
+          <OverlayText className="overlay">
+            수정하려면 여기를 클릭하세요
+          </OverlayText>
         </ImageWrapper>
 
-        <Input
+        <input
+          ref={imageInputRef}
           name="image"
           type="file"
           accept="image/*"
-          onChange={handleChange}
+          onChange={handleImageChange}
+          style={{ display: "none" }}
         />
-
-        <Seller>판매자 {product.sellerName}</Seller>
 
         <Textarea
           name="description"
           value={formData.description}
           onChange={handleChange}
         />
-
-        <Input
-          name="chatLink"
-          value={formData.chatLink}
-          onChange={handleChange}
-        />
-
         <InfoRow>
           <strong>경매 번호</strong>
           <span>{product.auctionNum}</span>
@@ -320,47 +217,72 @@ const SellerProductDetailPage = () => {
           <strong>입찰 수</strong>
           <span>{product.bidCount}</span>
         </InfoRow>
-
-        <Select name="status" value={formData.status} onChange={handleChange}>
-          <option value="진행 중">진행 중</option>
-          <option value="종료 됨">종료 됨</option>
-          <option value="낙찰 완료">낙찰 완료</option>
-        </Select>
-        <Select
-          name="category"
-          value={formData.category}
-          onChange={handleChange}
-        >
-          {categories.map((cat) => (
-            <option key={cat} value={cat}>
-              {cat}
-            </option>
-          ))}
-        </Select>
-        <Input
-          name="minPrice"
-          type="number"
-          value={formData.minPrice}
-          onChange={handleChange}
-        />
-        <Input
-          name="maxPrice"
-          type="number"
-          value={formData.maxPrice}
-          onChange={handleChange}
-        />
-        <Input
-          name="bidUnit"
-          type="number"
-          value={formData.bidUnit}
-          onChange={handleChange}
-        />
-        <Input
-          name="deadline"
-          type="datetime-local"
-          value={formData.deadline}
-          onChange={handleChange}
-        />
+        <InfoRow>
+          <strong>오픈채팅방 링크</strong>
+          <Input
+            name="chatLink"
+            value={formData.chatLink}
+            onChange={handleChange}
+          />
+        </InfoRow>
+        <InfoRow>
+          <strong>경매 상태</strong>
+          <Select name="status" value={formData.status} onChange={handleChange}>
+            <option value="진행 중">진행 중</option>
+            <option value="종료 됨">종료 됨</option>
+            <option value="낙찰 완료">낙찰 완료</option>
+          </Select>
+        </InfoRow>
+        <InfoRow>
+          <strong>카테고리</strong>
+          <Select
+            name="category"
+            value={formData.category}
+            onChange={handleChange}
+          >
+            {categories.map((cat) => (
+              <option key={cat} value={cat}>
+                {cat}
+              </option>
+            ))}
+          </Select>
+        </InfoRow>
+        <InfoRow>
+          <strong>최소 입찰가</strong>
+          <Input
+            name="minPrice"
+            type="number"
+            value={formData.minPrice}
+            onChange={handleChange}
+          />
+        </InfoRow>
+        <InfoRow>
+          <strong>최대 입찰가</strong>
+          <Input
+            name="maxPrice"
+            type="number"
+            value={formData.maxPrice}
+            onChange={handleChange}
+          />
+        </InfoRow>
+        <InfoRow>
+          <strong>입찰 단위</strong>
+          <Input
+            name="bidUnit"
+            type="number"
+            value={formData.bidUnit}
+            onChange={handleChange}
+          />
+        </InfoRow>
+        <InfoRow>
+          <strong>마감 기한</strong>
+          <Input
+            name="deadline"
+            type="datetime-local"
+            value={formData.deadline}
+            onChange={handleChange}
+          />
+        </InfoRow>
 
         <ButtonRow>
           <ActionButton onClick={handleSave}>상품 수정하기</ActionButton>
@@ -375,3 +297,158 @@ const SellerProductDetailPage = () => {
 };
 
 export default SellerProductDetailPage;
+
+const PageWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background: #fff;
+  color: #333;
+`;
+
+const Main = styled.div`
+  flex: 1;
+  padding: 20px 16px;
+  max-width: 400px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`;
+
+const TitleInput = styled.input`
+  font-weight: 700;
+  font-size: 1.4rem;
+  width: 100%;
+  border: none;
+  margin-bottom: 15px;
+`;
+
+const Subtitle = styled.div`
+  font-size: 0.8rem;
+  color: #999;
+  margin-bottom: 10px;
+  width: 90%;
+  text-align: right;
+`;
+
+const ImageWrapper = styled.div`
+  position: relative;
+  width: 100%;
+  height: 260px;
+  margin-bottom: 20px;
+  border-radius: 10px;
+  overflow: hidden;
+  background: #f5f5f5;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+
+  img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+  }
+
+  &:hover .overlay {
+    opacity: 1;
+  }
+`;
+
+const OverlayText = styled.div`
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.4);
+  color: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1rem;
+  font-weight: 500;
+  text-align: center;
+  opacity: 0;
+  transition: opacity 0.3s;
+  pointer-events: none;
+`;
+
+const Seller = styled.div`
+  font-size: 0.9rem;
+  color: #999;
+  text-align: right;
+  width: 90%;
+`;
+
+const Textarea = styled.textarea`
+  width: 90%;
+  min-height: 70px;
+  font-size: 1rem;
+  color: #666;
+  margin-bottom: 40px;
+  resize: none;
+  border: 1px solid #ccc;
+`;
+
+const Input = styled.input`
+  width: 85%;
+  font-size: 0.8rem;
+  padding: 6px 10px;
+  margin-bottom: 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  color: #666;
+`;
+
+const Select = styled.select`
+  width: 90%;
+  font-size: 0.8rem;
+  padding: 6px 10px;
+  margin-bottom: 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  color: #666;
+`;
+
+const InfoRow = styled.div`
+  font-size: 0.9rem;
+  width: 90%;
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+
+  strong {
+    width: 150px;
+    font-weight: 600;
+    color: #555;
+    line-height: 30px;
+  }
+  span {
+    text-align: right;
+    color: #666;
+  }
+
+  input {
+    text-align: right;
+  }
+`;
+
+const ButtonRow = styled.div`
+  margin-top: 34px;
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+`;
+
+const ActionButton = styled.button`
+  background-color: #f76059;
+  border: none;
+  color: white;
+  font-weight: 400;
+  font-size: 0.95rem;
+  border-radius: 5px;
+  padding: 12px 0;
+  width: 110px;
+  cursor: pointer;
+`;

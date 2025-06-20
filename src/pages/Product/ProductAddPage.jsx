@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { axiosInstance } from "../../axios/axiosInstance";
 
 const PageWrapper = styled.div`
   padding: 20px 16px;
@@ -177,11 +177,9 @@ const ProductAddPage = () => {
         deadline: new Date(form.deadline).toISOString(),
       };
 
-      const token = localStorage.getItem("jwt");
-      const res = await axios.post(
+      const res = await axiosInstance.post(
         "http://localhost:8080/api/product",
-        payload,
-        { headers: { Authorization: `Bearer ${token}` } }
+        payload
       );
 
       if (res.data.success) {

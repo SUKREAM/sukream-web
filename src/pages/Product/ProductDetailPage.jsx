@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { Link, useParams } from "react-router-dom";
-import axios from "axios";
+import { axiosInstance } from "../../axios/axiosInstance";
 
 const ProductDetailPage = () => {
   const { id } = useParams();
@@ -39,7 +39,7 @@ const ProductDetailPage = () => {
   }, [product]);
 
   useEffect(() => {
-    axios
+    axiosInstance
       .get(`http://localhost:8080/api/product/${id}`)
       .then((res) => {
         if (res.data.success) {
@@ -88,13 +88,8 @@ const ProductDetailPage = () => {
       nickname: nickname,
     };
 
-    axios
-      .post(`http://localhost:8080/api/products/${id}/bidders`, data, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-      })
+    axiosInstance
+      .post(`http://localhost:8080/api/products/${id}/bidders`, data)
       .then((res) => {
         if (res.data.success) {
           alert("입찰이 완료되었습니다.");

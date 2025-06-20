@@ -4,6 +4,88 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import TopProducts from "../../components/TopProducts";
 
+const categories = [
+  "전체",
+  "패션",
+  "보스턴백",
+  "토트백",
+  "웨이스트백",
+  "숄더백",
+  "크로스백",
+  "에코,캔버스백",
+];
+
+const ProductListPage = () => {
+  const [products, setProducts] = useState([]);
+  const [category, setCategory] = useState("전체");
+  const [sort, setSort] = useState("basic");
+
+  useEffect(() => {
+    let url = `http://localhost:8080/api/product`;
+    const params = [];
+    if (category !== "전체") params.push(`category=${category}`);
+    if (sort === "popular") params.push(`sort=popular`);
+    if (params.length > 0) url += `?${params.join("&")}`;
+
+    axios
+      .get(url)
+      .then((res) => {
+        if (res.data.success) {
+          setProducts(res.data.data);
+        } else {
+          console.error("상품 조회 실패:", res.data.errorMsg);
+        }
+      })
+      .catch((err) => {
+        console.error("상품 조회 중 오류:", err);
+      });
+  }, [category, sort]);
+
+  return (
+    <PageWrapper>
+      <Main>
+        <CategoryBar>
+          {categories.map((cat) => (
+            <CategoryButton
+              key={cat}
+              active={category === cat}
+              onClick={() => setCategory(cat)}
+            >
+              {cat}
+            </CategoryButton>
+          ))}
+        </CategoryBar>
+
+        <TopProducts />
+
+        <SortSelect value={sort} onChange={(e) => setSort(e.target.value)}>
+          <option value="basic">등록순</option>
+          <option value="popular">인기순</option>
+        </SortSelect>
+
+        <ProductList>
+          {products.map((product) => (
+            <ProductItem key={product.id}>
+              <ProductLink to={`/products/${product.id}`}>
+                <SellerName>{product.sellerName}</SellerName>
+                <Title>{product.title}</Title>
+                <TopRightDate>
+                  {new Date(product.createdAt).toLocaleString()}
+                </TopRightDate>
+                <BottomRow>
+                  <BidCountText>입찰 수: {product.bidCount}회</BidCountText>
+                </BottomRow>
+              </ProductLink>
+            </ProductItem>
+          ))}
+        </ProductList>
+      </Main>
+    </PageWrapper>
+  );
+};
+
+export default ProductListPage;
+
 const PageWrapper = styled.div`
   display: flex;
   flex-direction: column;
@@ -95,85 +177,3 @@ const BidCountText = styled.span`
   font-size: 10px;
   color: #666;
 `;
-
-const categories = [
-  "전체",
-  "패션",
-  "보스턴백",
-  "토트백",
-  "웨이스트백",
-  "숄더백",
-  "크로스백",
-  "에코,캔버스백",
-];
-
-const ProductListPage = () => {
-  const [products, setProducts] = useState([]);
-  const [category, setCategory] = useState("전체");
-  const [sort, setSort] = useState("basic");
-
-  useEffect(() => {
-    let url = `http://localhost:8080/api/product`;
-    const params = [];
-    if (category !== "전체") params.push(`category=${category}`);
-    if (sort === "popular") params.push(`sort=popular`);
-    if (params.length > 0) url += `?${params.join("&")}`;
-
-    axios
-      .get(url)
-      .then((res) => {
-        if (res.data.success) {
-          setProducts(res.data.data);
-        } else {
-          console.error("상품 조회 실패:", res.data.errorMsg);
-        }
-      })
-      .catch((err) => {
-        console.error("상품 조회 중 오류:", err);
-      });
-  }, [category, sort]);
-
-  return (
-    <PageWrapper>
-      <Main>
-        <CategoryBar>
-          {categories.map((cat) => (
-            <CategoryButton
-              key={cat}
-              active={category === cat}
-              onClick={() => setCategory(cat)}
-            >
-              {cat}
-            </CategoryButton>
-          ))}
-        </CategoryBar>
-
-        <TopProducts />
-
-        <SortSelect value={sort} onChange={(e) => setSort(e.target.value)}>
-          <option value="basic">등록순</option>
-          <option value="popular">인기순</option>
-        </SortSelect>
-
-        <ProductList>
-          {products.map((product) => (
-            <ProductItem key={product.id}>
-              <ProductLink to={`/products/${product.id}`}>
-                <SellerName>{product.sellerName}</SellerName>
-                <Title>{product.title}</Title>
-                <TopRightDate>
-                  {new Date(product.createdAt).toLocaleString()}
-                </TopRightDate>
-                <BottomRow>
-                  <BidCountText>입찰 수: {product.bidCount}회</BidCountText>
-                </BottomRow>
-              </ProductLink>
-            </ProductItem>
-          ))}
-        </ProductList>
-      </Main>
-    </PageWrapper>
-  );
-};
-
-export default ProductListPage;
