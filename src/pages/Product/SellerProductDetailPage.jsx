@@ -3,6 +3,18 @@ import styled from "styled-components";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 
+const statusMap = {
+  open: "진행 중",
+  closed: "종료 됨",
+  awarded: "낙찰 완료",
+};
+
+const reverseStatusMap = {
+  "진행 중": "open",
+  "종료 됨": "closed",
+  "낙찰 완료": "awarded",
+};
+
 const PageWrapper = styled.div`
   display: flex;
   flex-direction: column;
@@ -80,6 +92,15 @@ const Input = styled.input`
   border-radius: 4px;
 `;
 
+const Select = styled.select`
+  width: 90%;
+  font-size: 1rem;
+  padding: 6px 10px;
+  margin-bottom: 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+`;
+
 const InfoRow = styled.div`
   display: flex;
   justify-content: space-between;
@@ -89,30 +110,40 @@ const InfoRow = styled.div`
     font-weight: 600;
     color: #555;
   }
+  span {
+    text-align: right;
+  }
 `;
 
 const ButtonRow = styled.div`
   margin-top: 24px;
   display: flex;
   justify-content: space-between;
-  gap: 20px;
+  gap: 10px;
 `;
 
 const ActionButton = styled.button`
-  background-color: ${(props) => (props.danger ? "#dc3545" : "#007bff")};
+  background-color: #f76059;
   border: none;
   color: white;
-  font-weight: 600;
+  font-weight: 400;
   font-size: 0.95rem;
   border-radius: 5px;
-  padding: 10px 0;
-  width: 150px;
+  padding: 12px 0;
+  width: 110px;
   cursor: pointer;
-
-  &:hover {
-    background-color: ${(props) => (props.danger ? "#bb2d3b" : "#0056b3")};
-  }
 `;
+
+const categories = [
+  "전체",
+  "패션",
+  "보스턴백",
+  "토트백",
+  "웨이스트백",
+  "숄더백",
+  "크로스백",
+  "에코,캔버스백",
+];
 
 const SellerProductDetailPage = () => {
   const { id } = useParams();
@@ -147,7 +178,7 @@ const SellerProductDetailPage = () => {
             bidUnit: p.bidUnit,
             deadline: p.deadline.slice(0, 16),
             chatLink: p.chatLink,
-            status: p.status,
+            status: statusMap[p.status],
             image: null,
           });
         } else {
@@ -168,8 +199,11 @@ const SellerProductDetailPage = () => {
   };
 
   const handleSave = () => {
-    const token = localStorage.getItem("accessToken");
-    const updatedData = { ...formData };
+    const token = localStorage.getItem("jwt");
+    const updatedData = {
+      ...formData,
+      status: reverseStatusMap[formData.status],
+    };
 
     const reader = new FileReader();
     if (formData.image) {
@@ -276,18 +310,33 @@ const SellerProductDetailPage = () => {
           value={formData.chatLink}
           onChange={handleChange}
         />
+
         <InfoRow>
           <strong>경매 번호</strong>
           <span>{product.auctionNum}</span>
         </InfoRow>
 
         <InfoRow>
-          <strong>입찰 수: </strong>
+          <strong>입찰 수</strong>
           <span>{product.bidCount}</span>
         </InfoRow>
 
-        <Input name="status" value={formData.status} onChange={handleChange} />
-
+        <Select name="status" value={formData.status} onChange={handleChange}>
+          <option value="진행 중">진행 중</option>
+          <option value="종료 됨">종료 됨</option>
+          <option value="낙찰 완료">낙찰 완료</option>
+        </Select>
+        <Select
+          name="category"
+          value={formData.category}
+          onChange={handleChange}
+        >
+          {categories.map((cat) => (
+            <option key={cat} value={cat}>
+              {cat}
+            </option>
+          ))}
+        </Select>
         <Input
           name="minPrice"
           type="number"
@@ -298,11 +347,6 @@ const SellerProductDetailPage = () => {
           name="maxPrice"
           type="number"
           value={formData.maxPrice}
-          onChange={handleChange}
-        />
-        <Input
-          name="category"
-          value={formData.category}
           onChange={handleChange}
         />
         <Input
@@ -317,10 +361,12 @@ const SellerProductDetailPage = () => {
           value={formData.deadline}
           onChange={handleChange}
         />
+
         <ButtonRow>
-          <ActionButton onClick={handleSave}>수정</ActionButton>
-          <ActionButton danger onClick={handleDelete}>
-            삭제
+          <ActionButton onClick={handleSave}>상품 수정하기</ActionButton>
+          <ActionButton onClick={handleDelete}>상품 삭제하기</ActionButton>
+          <ActionButton onClick={() => navigate(`/award-management`)}>
+            입찰자 조회
           </ActionButton>
         </ButtonRow>
       </Main>

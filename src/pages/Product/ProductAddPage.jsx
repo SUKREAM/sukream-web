@@ -10,14 +10,12 @@ const PageWrapper = styled.div`
   color: #333;
 `;
 
-/* ───────────────────  상단 제목  ─────────────────── */
 const Title = styled.h2`
   font-size: 1.1rem;
   font-weight: 700;
   margin-bottom: 24px;
 `;
 
-/* ───────────────────  이미지 업로드  ─────────────────── */
 const ImageBox = styled.label`
   position: relative;
   width: 90px;
@@ -53,12 +51,10 @@ const RemoveBtn = styled.button`
   cursor: pointer;
 `;
 
-/* 눈에 보이지 않는 실제 파일 input */
 const HiddenFileInput = styled.input`
   display: none;
 `;
 
-/* ───────────────────  폼 공통 레이아웃  ─────────────────── */
 const Form = styled.form`
   display: flex;
   flex-direction: column;
@@ -97,7 +93,6 @@ const Row = styled.div`
   }
 `;
 
-/* ───────────────────  등록 버튼  ─────────────────── */
 const SubmitBtn = styled.button`
   margin-top: 40px;
   width: 100%;
@@ -111,7 +106,16 @@ const SubmitBtn = styled.button`
   cursor: pointer;
 `;
 
-const categories = ["크로스백", "토트백", "전자기기", "도서", "기타"];
+const categories = [
+  "전체",
+  "패션",
+  "보스턴백",
+  "토트백",
+  "웨이스트백",
+  "숄더백",
+  "크로스백",
+  "에코,캔버스백",
+];
 
 const ProductAddPage = () => {
   const [form, setForm] = useState({
@@ -126,7 +130,6 @@ const ProductAddPage = () => {
     chatLink: "",
   });
 
-  /* 이미지 업로드 -------------------------------------------------- */
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (!file) return;
@@ -172,7 +175,7 @@ const ProductAddPage = () => {
         deadline: new Date(form.deadline).toISOString(),
       };
 
-      const token = localStorage.getItem("accessToken");
+      const token = localStorage.getItem("jwt");
       const res = await axios.post(
         "http://localhost:8080/api/product",
         payload,
