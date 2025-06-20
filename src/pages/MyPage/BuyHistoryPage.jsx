@@ -39,7 +39,7 @@ const BuyHistoryPage = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const token = localStorage.getItem("accessToken");
+    const token = localStorage.getItem("jwt");
     console.log("토큰 출력 테스트:ㅣ ", token);
 
     if (!token) {
@@ -56,11 +56,12 @@ const BuyHistoryPage = () => {
         // 백엔드 데이터가 아래 형식임을 맞춰서 변환 (status 문자열 "낙찰완료", "낙찰대기" -> "COMPLETED", "IN_PROGRESS")
         const mappedItems = res.data.map(item => ({
           id: item.orderId,
+          productId : item.productId,
           productName: item.productName,
           productImage: item.productImage,
           purchaseDate: item.orderDate.split("T")[0], // 날짜만 자름 (예: 2025-06-01)
           status: item.status === "낙찰완료" ? "COMPLETED" : "IN_PROGRESS",
-          reviewWritten: false, // 리뷰 작성 여부는 API가 없으면 false로 두고, 나중에 연동 가능
+          reviewWritten: item.reviewWritten,
         }));
         setItems(mappedItems);
       })
@@ -82,7 +83,7 @@ const BuyHistoryPage = () => {
             상태: {item.status === "COMPLETED" ? "낙찰완료" : "거래중"}
           </Status>
           <ButtonGroup>
-            <button onClick={() => navigate(`/products/${item.id}`)}>
+            <button onClick={() => navigate(`/products/${item.productId}`)}>
               상세보기
             </button>
             {item.status === "COMPLETED" && !item.reviewWritten && (
