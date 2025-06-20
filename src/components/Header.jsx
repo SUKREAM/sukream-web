@@ -6,6 +6,7 @@ import logoImg from "../assets/images/logo.svg";
 import mypageImg from "../assets/images/myBtn.svg";
 
 const HeaderWrapper = styled.header`
+  margin: auto;
   background: #ffffff;
   color: #fff;
   display: flex;
@@ -26,7 +27,6 @@ const IconButton = styled(Link)`
   display: inline-block;
   width: 40px;
   height: 40px;
-  margin-left: 12px;
   margin-top: 13px;
 
   img {

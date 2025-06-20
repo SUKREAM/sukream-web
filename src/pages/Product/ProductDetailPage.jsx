@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { Link, useParams } from "react-router-dom";
-import axios from "axios";
+import { axiosInstance } from "../../axios/axiosInstance";
 
 const ProductDetailPage = () => {
   const { id } = useParams();
@@ -39,7 +39,7 @@ const ProductDetailPage = () => {
   }, [product]);
 
   useEffect(() => {
-    axios
+    axiosInstance
       .get(`http://localhost:8080/api/product/${id}`)
       .then((res) => {
         if (res.data.success) {
@@ -88,13 +88,8 @@ const ProductDetailPage = () => {
       nickname: nickname,
     };
 
-    axios
-      .post(`http://localhost:8080/api/products/${id}/bidders`, data, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-      })
+    axiosInstance
+      .post(`http://localhost:8080/api/products/${id}/bidders`, data)
       .then((res) => {
         if (res.data.success) {
           alert("입찰이 완료되었습니다.");
@@ -221,8 +216,7 @@ const PageWrapper = styled.div`
 
 const Main = styled.main`
   flex: 1;
-  padding: 2px 16px;
-  max-width: 400px;
+  width: 100%;
   margin: 0 auto;
 `;
 const TitleRow = styled.div`
@@ -290,7 +284,7 @@ const Seller = styled.div`
 const Description = styled.div`
   font-size: 1rem;
   line-height: 1.4;
-  color: #9a9a9a;
+  color: #777;
   margin-bottom: 24px;
   white-space: pre-wrap;
   text-align: center;
@@ -314,20 +308,24 @@ const OpenLink = styled.div`
   margin-bottom: 30px;
   color: #9a9a9a;
   background-color: #f8f8f8;
+  word-break: break-all;
 `;
 
 const InfoRow = styled.div`
   display: flex;
   justify-content: space-between;
-  margin-bottom: 10px;
+  margin-bottom: 18px;
 
   strong {
     font-weight: 600;
     color: #555;
     width: 100px;
+    font-size: 0.9rem;
   }
 
   span {
+    color: #777;
+    font-size: 0.9rem;
     text-align: right;
   }
 `;
