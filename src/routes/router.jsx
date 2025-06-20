@@ -2,7 +2,6 @@ import React from "react";
 import { createBrowserRouter } from "react-router-dom";
 import MainLayout from "../layouts/MainLayout";
 import MainPage from "../pages/MainPage";
-import MyPage from "../pages/MyPage/MyPage";
 import OnBoardingPage from "../pages/OnBoardingPage";
 
 // User 관련 import
@@ -18,13 +17,9 @@ import ReviewWritePage from "../pages/Review/ReviewWritePage";
 
 // MyPage 관련 Import
 import MyPage from "../pages/MyPage/MyPage";
-import BuyHistoryPage from "../pages/MyPage/BuyHistoryPage";
-import SellHistoryPage from "../pages/MyPage/SellHistoryPage";
 
 // Bidder 관련 import
 import AwardManagementPage from "../pages/Bidder/AwardManagementPage";
-import ReviewPage from "../pages/Review/ReviewPage";
-import ReviewWritePage from "../pages/Review/ReviewWritePage";
 import BuyHistoryPage from "../pages/MyPage/BuyHistoryPage";
 import SellHistoryPage from "../pages/MyPage/SellHistoryPage";
 
@@ -41,7 +36,7 @@ const router = createBrowserRouter([
       { path: "products", element: <ProductListPage /> },
       { path: "products/:id", element: <ProductDetailPage /> },
       { path: "search", element: <MainPage /> },
-       
+
       // 리뷰 관련 라우트
       { path: "reviews", element: <ReviewPage /> },           // 리뷰 조회
       { path: "reviews/write/:productId", element: <ReviewWritePage /> }, // 리뷰 작성회 페이지
