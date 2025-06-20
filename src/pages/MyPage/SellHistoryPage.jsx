@@ -4,34 +4,130 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 const PageWrapper = styled.div`
-  padding: 16px;
+  padding: 20px;
   min-height: 100vh;
+
+`;
+
+const DateGroup = styled.div`
+  margin-bottom: 32px;
+`;
+
+const DateTitle = styled.h3`
+  margin-bottom: 16px;
+  color: #444;
+  font-weight: 700;
+  border-bottom: 2px solid #ccc;
+  padding-bottom: 6px;
 `;
 
 const ItemCard = styled.div`
   background: white;
   margin-bottom: 12px;
-  padding: 12px;
-  border-radius: 8px;
+  padding: 16px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
 `;
 
-const Status = styled.p`
-  color: ${({ status }) => (status === "COMPLETED" ? "green" : "orange")};
-  font-weight: bold;
+const ItemImage = styled.img`
+  width: 100px;
+  height: 100px;
+  border-radius: 12px;
+  object-fit: cover;
+  margin-right: 20px;
+  flex-shrink: 0;
+  background: #eee;
+`;
+
+const InfoSection = styled.div`
+  flex: 1;
+`;
+
+const StatusRow = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+`;
+
+const StatusBadge = styled.span`
+  padding: 4px 10px;
+  border-radius: 16px;
+  color: white;
+  font-weight: 700;
+  font-size: 0.9rem;
+  background-color: ${({ status }) =>
+    status === "AWARDED" ? "#28a745" : status === "OPEN" ? "#1976d2" : "#9e9e9e"};
+`;
+
+const DaysAgo = styled.span`
+  color: #666;
+  font-size: 0.85rem;
+`;
+
+const ProductName = styled.p`
+  font-weight: 600;
+  margin-bottom: 6px;
+  color: #222;
 `;
 
 const ButtonGroup = styled.div`
-  display: flex;
-  gap: 8px;
-  margin-top: 8px;
+  margin-top: 12px;
 `;
+
+const ActionButton = styled.button`
+  background-color: #1976d2;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 14px;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  width: 140px;
+
+  &:hover {
+    background-color: #0f4a8c;
+  }
+`;
+
+const groupItemsByDate = (items) => {
+  return items.reduce((groups, item) => {
+    const dateKey = item.createdAt ? item.createdAt.slice(0, 10) : "Unknown";
+    if (!groups[dateKey]) groups[dateKey] = [];
+    groups[dateKey].push(item);
+    return groups;
+  }, {});
+};
+
+const calculateDaysAgo = (dateString) => {
+  const date = new Date(dateString);
+  const now = new Date();
+  const diffTime = now - date;
+  return Math.floor(diffTime / (1000 * 60 * 60 * 24));
+};
+
+const getStatusText = (status) => {
+  switch (status) {
+    case "AWARDED":
+      return "거래완료";
+    case "OPEN":
+      return "판매중";
+    case "CLOSED":
+      return "판매중지";
+    default:
+      return "알 수 없음";
+  }
+};
 
 const SellHistoryPage = () => {
   const [items, setItems] = useState([]);
   const navigate = useNavigate();
 
   useEffect(() => {
-    const token = localStorage.getItem("jwt"); 
+    const token = localStorage.getItem("jwt");
 
     axios
       .get("http://localhost:8080/api/mypage/sales", {
@@ -40,48 +136,64 @@ const SellHistoryPage = () => {
         },
       })
       .then((res) => {
-        // 응답 데이터가 배열이면 바로 set, 아니면 맞게 변환 필요
         setItems(res.data);
       })
       .catch((err) => {
         console.error("판매내역 조회 실패:", err);
-        // 에러 시 빈 배열이나 알림 처리 가능
         setItems([]);
       });
   }, []);
 
+  const groupedItems = groupItemsByDate(items);
+  // 날짜 키를 최신순 정렬
+  const sortedDates = Object.keys(groupedItems).sort(
+    (a, b) => new Date(b) - new Date(a)
+  );
+
   return (
     <PageWrapper>
-      <h2>판매 내역</h2>
-      {items.map((item) => (
-        <ItemCard key={item.id}>
-          <img
-            src={`data:image/png;base64,${item.productImage}`}
-            alt={item.productName}
-            style={{ width: "100%", borderRadius: "8px", objectFit: "cover" }}
-          />
-          <p>상품명: {item.productName}</p>
-          <p>
-            {item.status === "COMPLETED"
-              ? `거래확정일: ${item.completedDate}`
-              : `판매등록일: ${item.registrationDate}`}
-          </p>
-          <Status status={item.status}>
-            상태: {item.status === "COMPLETED" ? "거래완료" : "판매중"}
-          </Status>
-          <ButtonGroup>
-            {item.status === "IN_PROGRESS" && item.bidRequested && (
-              <button onClick={() => navigate(`/mypage/sell/bids/${item.id}`)}>
-                입찰요청보기
-              </button>
-            )}
-            {item.status === "COMPLETED" && item.reviewReceived && (
-              <button onClick={() => navigate(`/reviews?sellerId=${item.id}`)}>
-                받은 후기 보기
-              </button>
-            )}
-          </ButtonGroup>
-        </ItemCard>
+      <h2>나의 판매 내역</h2>
+      {sortedDates.map((date) => (
+        <DateGroup key={date}>
+          <DateTitle>{date}</DateTitle>
+          {groupedItems[date].map((item) => (
+            <ItemCard key={item.productId}>
+              <ItemImage
+                src={
+                  item.productImage
+                    ? `data:image/png;base64,${item.productImage}`
+                    : "/default.png"
+                }
+                alt={item.productName}
+              />
+              <InfoSection>
+                <StatusRow>
+                  <StatusBadge status={item.status}>
+                    {getStatusText(item.status)}
+                  </StatusBadge>
+                  <DaysAgo>{calculateDaysAgo(date)}일전</DaysAgo>
+                </StatusRow>
+                <ProductName>{item.productName}</ProductName>
+                <ButtonGroup>
+                  {item.status === "OPEN" && (
+                    <ActionButton
+                      onClick={() => navigate(`/award-management/${item.productId}`)}
+                    >
+                      입찰 요청 보기
+                    </ActionButton>
+                  )}
+                  {item.status === "AWARDED" && (
+                    <ActionButton
+                      onClick={() => navigate(`/reviews?productId=${item.productId}`)}
+                    >
+                      받은 후기 보기
+                    </ActionButton>
+                  )}
+                </ButtonGroup>
+              </InfoSection>
+            </ItemCard>
+          ))}
+        </DateGroup>
       ))}
     </PageWrapper>
   );
