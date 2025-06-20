@@ -13,7 +13,13 @@ export const BidderList = ({ productId, token }) => {
                         Authorization: `Bearer ${token}`,
                     },
                 });
-                setBidders(res.data);
+
+                if (res.data && res.data.success) {
+                    setBidders(res.data.data);
+                    console.log("입찰자 목록:", res.data.data);
+                } else {
+                    console.warn("API 요청 실패:", res.data.errorMsg);
+                }
             } catch (error) {
                 console.error("입찰자 목록 불러오기 실패:", error);
             }
@@ -21,6 +27,7 @@ export const BidderList = ({ productId, token }) => {
 
         fetchBidders();
     }, [productId, token]);
+
 
     const handleAward = async (bidderId) => {
         try {
@@ -42,21 +49,21 @@ export const BidderList = ({ productId, token }) => {
                 <div className="overlap-wrapper">
                     <div className="overlap">
                         <div className="text-wrapper">입찰자 목록</div>
-            {bidders.length === 0 && <div>입찰자가 없습니다.</div>}
-            {bidders.map(bidder => (
-   <div key={bidder.bidderId} className={`overlap-${bidder.bidderId}`}>
-                <div className="rectangle" />
-                <div className="text-wrapper-4">{bidder.nickname}</div>
-                <div className="price">{bidder.price.toLocaleString()}원</div>
-                <div className="submitted-ago">{bidder.submittedAgo}</div>
-                <div className="div-wrapper">
-                  <div className="overlap-group-2">
-                    <button className="award-button">낙찰하기</button>
-                  </div>
-                </div>
-              </div>
-            ))}
-            <div className="rectangle-3" />
+                        {bidders.map(bidder => (
+                            <div key={bidder.bidderId} className="bidder-card">
+                                <div className="nickname">{bidder.nickname}</div>
+                                <div className="price">{bidder.price.toLocaleString()}원</div>
+                                <div className="submitted-ago">{bidder.submittedAgo}</div>
+                                <button
+                                    className="award-button"
+                                    onClick={() => handleAward(bidder.bidderId)}
+                                >
+                                    낙찰하기
+                                </button>
+                            </div>
+                        ))}
+
+                        <div className="rectangle-3" />
                     </div>
                 </div>
             </div>
