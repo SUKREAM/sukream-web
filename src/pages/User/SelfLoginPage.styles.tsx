@@ -78,3 +78,31 @@ export const ErrorMessage = styled.div`
     margin-top: 0px;
     margin-bottom: 12px;
 `;
+
+export const GenderWrapper = styled.div`
+  display: flex;
+  gap: 8px;
+`;
+
+export const GenderButton = styled.button<{ selected: boolean }>`
+  flex: 1;
+  padding: 10px;
+  background-color: ${({ selected }) => (selected ? '#f66' : '#f0f0f0')};
+  color: ${({ selected }) => (selected ? '#fff' : '#000')};
+  border-radius: 6px;
+  border: none;
+`;
+
+export const BirthRow = styled.div`
+  display: flex;
+  gap: 6px;
+  align-items: center;
+`;
+
+export const BirthInput = styled.input`
+  width: 60px;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  text-align: center;
+`;
