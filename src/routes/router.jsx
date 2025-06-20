@@ -10,6 +10,7 @@ import OnBoardingPage from "../pages/OnBoardingPage";
 import ProductListPage from "../pages/Product/ProductListPage";
 import ProductDetailPage from "../pages/Product/ProductDetailPage";
 import ProductAddPage from "../pages/Product/ProductAddPage";
+import SellerProductDetailPage from "../pages/Product/SellerProductDetailPage";
 
 // Review 관련 import
 import ReviewPage from "../pages/Review/ReviewPage";
@@ -36,6 +37,7 @@ const router = createBrowserRouter([
       { path: "products", element: <ProductListPage /> },
       { path: "products/:id", element: <ProductDetailPage /> },
       { path: "products/add", element: <ProductAddPage /> },
+      { path: "products/seller/:id", element: <SellerProductDetailPage /> },
 
       { path: "mypage", element: <MyPage /> },
       { path: "mypage/buy", element: <BuyHistoryPage /> },
