@@ -17,13 +17,13 @@ const reverseStatusMap = {
 
 const categories = [
   "전체",
-  "패션",
   "보스턴백",
   "토트백",
   "웨이스트백",
   "숄더백",
   "크로스백",
   "에코,캔버스백",
+  "백팩",
 ];
 
 const SellerProductDetailPage = () => {
@@ -218,7 +218,7 @@ const SellerProductDetailPage = () => {
           <span>{product.bidCount}</span>
         </InfoRow>
         <InfoRow>
-          <strong>오픈채팅방 링크</strong>
+          <strong>채팅 링크</strong>
           <Input
             name="chatLink"
             value={formData.chatLink}
@@ -334,8 +334,8 @@ const Subtitle = styled.div`
 
 const ImageWrapper = styled.div`
   position: relative;
-  width: 100%;
-  height: 260px;
+  width: 90%;
+  height: 240px;
   margin-bottom: 20px;
   border-radius: 10px;
   overflow: hidden;
@@ -382,33 +382,36 @@ const Seller = styled.div`
 `;
 
 const Textarea = styled.textarea`
-  width: 90%;
+  width: 82%;
   min-height: 70px;
-  font-size: 1rem;
+  font-size: 0.9rem;
   color: #666;
   margin-bottom: 40px;
   resize: none;
-  border: 1px solid #ccc;
+  border: 1px solid #ddd;
+  padding: 10px 10px;
+  border-radius: 7px;
 `;
 
 const Input = styled.input`
-  width: 85%;
+  width: 80%;
   font-size: 0.8rem;
   padding: 6px 10px;
   margin-bottom: 12px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
+  border: 1px solid #ddd;
+  border-radius: 7px;
   color: #666;
 `;
 
 const Select = styled.select`
-  width: 90%;
+  width: 40%;
   font-size: 0.8rem;
   padding: 6px 10px;
   margin-bottom: 12px;
-  border: 1px solid #ccc;
+  border: 1px solid #ddd;
   border-radius: 4px;
   color: #666;
+  text-align: center;
 `;
 
 const InfoRow = styled.div`

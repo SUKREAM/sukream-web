@@ -3,119 +3,15 @@ import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import { axiosInstance } from "../../axios/axiosInstance";
 
-const PageWrapper = styled.div`
-  padding: 20px 16px;
-  background: #fff;
-  min-height: 100vh;
-  font-family: "Noto Sans KR", sans-serif;
-  color: #333;
-`;
-
-const Title = styled.h2`
-  font-size: 1.1rem;
-  font-weight: 700;
-  margin-bottom: 24px;
-`;
-
-const ImageBox = styled.label`
-  position: relative;
-  width: 90px;
-  height: 90px;
-  border-radius: 6px;
-  border: 1px solid #ccc;
-  background: #f5f5f5;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  cursor: pointer;
-  margin-bottom: 24px;
-
-  img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    border-radius: 6px;
-  }
-`;
-
-const RemoveBtn = styled.button`
-  position: absolute;
-  top: -6px;
-  right: -6px;
-  width: 20px;
-  height: 20px;
-  border: none;
-  background: #000;
-  color: #fff;
-  border-radius: 50%;
-  font-size: 0.7rem;
-  cursor: pointer;
-`;
-
-const HiddenFileInput = styled.input`
-  display: none;
-`;
-
-const Form = styled.form`
-  display: flex;
-  flex-direction: column;
-  gap: 18px;
-`;
-
-const Row = styled.div`
-  display: flex;
-  align-items: center;
-  font-size: 0.9rem;
-
-  label {
-    width: 80px;
-    color: #666;
-  }
-
-  input,
-  select,
-  textarea {
-    flex: 1;
-    border: none;
-    background: transparent;
-    font-size: 0.9rem;
-    color: #111;
-    padding: 4px 0;
-    border-bottom: 1px solid #ddd;
-  }
-
-  textarea {
-    resize: vertical;
-    min-height: 90px;
-    border: 1px solid #ddd;
-    border-radius: 6px;
-    padding: 8px;
-    margin-top: 6px;
-  }
-`;
-
-const SubmitBtn = styled.button`
-  margin-top: 40px;
-  width: 100%;
-  padding: 14px 0;
-  font-size: 1rem;
-  font-weight: 700;
-  color: #fff;
-  background: #ff6969;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-`;
-
 const categories = [
   "전체",
-  "패션",
   "보스턴백",
   "토트백",
   "웨이스트백",
   "숄더백",
   "크로스백",
   "에코,캔버스백",
+  "백팩",
 ];
 
 const ProductAddPage = () => {
@@ -123,10 +19,10 @@ const ProductAddPage = () => {
   const [form, setForm] = useState({
     title: "",
     description: "",
-    minPrice: "",
-    maxPrice: "",
+    minPrice: 1000,
+    maxPrice: 1000,
     category: categories[0],
-    bidUnit: "",
+    bidUnit: 1000,
     deadline: "",
     image: "", // base64
     chatLink: "",
@@ -196,7 +92,7 @@ const ProductAddPage = () => {
 
   return (
     <PageWrapper>
-      <Title>상품 등록</Title>
+      <Title>상품 등록하기</Title>
 
       {/* 이미지 업로드 (1장 제한) */}
       <ImageBox htmlFor="image">
@@ -318,3 +214,111 @@ const ProductAddPage = () => {
 };
 
 export default ProductAddPage;
+
+const PageWrapper = styled.div`
+  padding: 20px 16px;
+  background: #fff;
+  min-height: 100vh;
+  font-family: "Noto Sans KR", sans-serif;
+  color: #333;
+`;
+
+const Title = styled.h2`
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin-bottom: 24px;
+  color: #666;
+`;
+
+const ImageBox = styled.label`
+  position: relative;
+  width: 90px;
+  height: 90px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  background: #f5f5f5;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  margin-bottom: 24px;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 6px;
+  }
+`;
+
+const RemoveBtn = styled.button`
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  width: 20px;
+  height: 20px;
+  border: none;
+  background: #000;
+  color: #fff;
+  border-radius: 50%;
+  font-size: 0.7rem;
+  cursor: pointer;
+`;
+
+const HiddenFileInput = styled.input`
+  display: none;
+`;
+
+const Form = styled.form`
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+`;
+
+const Row = styled.div`
+  display: flex;
+  align-items: center;
+  font-size: 0.9rem;
+
+  label {
+    width: 80px;
+    color: #666;
+  }
+
+  input,
+  select,
+  textarea {
+    flex: 1;
+    border: none;
+    background: transparent;
+    font-size: 0.9rem;
+    color: #999;
+    padding: 4px 0;
+    border-bottom: 1px solid #ddd;
+  }
+
+  textarea {
+    width: 95%;
+    resize: vertical;
+    min-height: 90px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    padding: 8px;
+    margin-top: 6px;
+    margin: auto;
+    resize: none;
+  }
+`;
+
+const SubmitBtn = styled.button`
+  margin-top: 40px;
+  width: 100%;
+  padding: 14px 0;
+  font-size: 1rem;
+  font-weight: 700;
+  color: #fff;
+  background: #ff6969;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+`;

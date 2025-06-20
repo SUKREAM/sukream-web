@@ -3,9 +3,9 @@ import styled from "styled-components";
 
 const FooterWrapper = styled.footer`
   background: #ffffff;
-  color: black;
+  color: #828282;
   text-align: center;
-  padding: 12px 16px;
+  padding: 30px 50px;
   font-size: 0.9rem;
 `;
 

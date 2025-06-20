@@ -216,8 +216,7 @@ const PageWrapper = styled.div`
 
 const Main = styled.main`
   flex: 1;
-  padding: 2px 16px;
-  max-width: 400px;
+  width: 100%;
   margin: 0 auto;
 `;
 const TitleRow = styled.div`
@@ -285,7 +284,7 @@ const Seller = styled.div`
 const Description = styled.div`
   font-size: 1rem;
   line-height: 1.4;
-  color: #9a9a9a;
+  color: #777;
   margin-bottom: 24px;
   white-space: pre-wrap;
   text-align: center;
@@ -309,20 +308,24 @@ const OpenLink = styled.div`
   margin-bottom: 30px;
   color: #9a9a9a;
   background-color: #f8f8f8;
+  word-break: break-all;
 `;
 
 const InfoRow = styled.div`
   display: flex;
   justify-content: space-between;
-  margin-bottom: 10px;
+  margin-bottom: 18px;
 
   strong {
     font-weight: 600;
     color: #555;
     width: 100px;
+    font-size: 0.9rem;
   }
 
   span {
+    color: #777;
+    font-size: 0.9rem;
     text-align: right;
   }
 `;

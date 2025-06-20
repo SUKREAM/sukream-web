@@ -25,12 +25,13 @@ const ProductList = styled.div`
   margin-bottom: 30px;
 `;
 
-const ProductItem = styled.li`
+const ProductItem = styled.div`
   list-style: none;
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
+  position: relative; // 이거 추가
 
   &:nth-child(1) {
     grid-column: 2 / 3;
@@ -45,13 +46,12 @@ const ProductItem = styled.li`
     grid-row: 2 / 3;
   }
 `;
-
 const ProductLink = styled(Link)`
   display: flex;
   flex-direction: column;
   align-items: center;
   background: #fff;
-  border-radius: 10px;
+  border-radius: 5px;
   padding: 12px;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
   color: #222;
@@ -72,7 +72,15 @@ const ProductTitle = styled.div`
   font-size: 14px;
 `;
 
+const EmojiBadge = styled.div`
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  font-size: 2.5rem;
+`;
+
 const TopProducts = () => {
+  const rankEmojis = ["🥇", "🥈", "🥉"];
   const [topProducts, setTopProducts] = useState([]);
 
   useEffect(() => {
@@ -114,10 +122,11 @@ const TopProducts = () => {
 
   return (
     <>
-      <SectionTitle>🔥 인기 상품 Top 3</SectionTitle>
+      <SectionTitle>인기 상품 Top 3</SectionTitle>
       <ProductList>
         {topProducts.map((product, idx) => (
           <ProductItem key={product.id}>
+            <EmojiBadge>{rankEmojis[idx]}</EmojiBadge>
             <ProductLink to={`/products/${product.id}`}>
               <ProductImage
                 src={`data:image/png;base64,${product.image}`}
@@ -127,9 +136,7 @@ const TopProducts = () => {
                   e.target.src = defaultImg;
                 }}
               />
-              <ProductTitle>
-                {idx + 1}위: {product.title}
-              </ProductTitle>
+              <ProductTitle>{product.title}</ProductTitle>
             </ProductLink>
           </ProductItem>
         ))}

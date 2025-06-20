@@ -6,13 +6,13 @@ import TopProducts from "../../components/TopProducts";
 
 const categories = [
   "전체",
-  "패션",
   "보스턴백",
   "토트백",
   "웨이스트백",
   "숄더백",
   "크로스백",
   "에코,캔버스백",
+  "백팩",
 ];
 
 const ProductListPage = () => {
@@ -94,26 +94,31 @@ const PageWrapper = styled.div`
 
 const Main = styled.main`
   flex: 1;
-  padding: 16px;
-  max-width: 350px;
+  width: 100%;
   margin: 0 auto;
 `;
 
 const CategoryBar = styled.div`
   display: flex;
   flex-wrap: wrap;
-  gap: 3.3px;
-  margin-bottom: 16px;
-  max-width: 380px;
+  justify-content: center;
+  align-content: center;
+  row-gap: 5px;
+  column-gap: 7px;
+  height: 80px;
+  width: 100%;
+  background: #f5f4f4;
+  padding: 0;
+  overflow: hidden;
 `;
 
 const CategoryButton = styled.button`
   text-align: left;
   font-size: 11px;
-  width: 85px;
+  width: 83px;
   height: 30px;
   padding: 6px 10px;
-  border: 1px solid #aaa;
+  border: 0;
   background: ${({ active }) => (active ? "#007bff" : "white")};
   color: ${({ active }) => (active ? "white" : "#333")};
   cursor: pointer;
@@ -121,8 +126,11 @@ const CategoryButton = styled.button`
 
 const SortSelect = styled.select`
   margin-left: auto;
-  padding: 4px;
+  padding: 4px 7px;
   border-radius: 4px;
+  color: #777;
+  border: 1px solid #999;
+  margin-top: 20px;
 `;
 
 const ProductList = styled.ul`
@@ -131,18 +139,16 @@ const ProductList = styled.ul`
 `;
 
 const ProductItem = styled.li`
-  margin-top: 12px;
+  margin-top: 7px;
 `;
 
 const ProductLink = styled(Link)`
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 3px;
   padding: 12px;
-  background: #fff;
-  border-radius: 6px;
+  border-top: 1px solid #c8c8c8;
   color: #222;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   text-decoration: none;
   position: relative;
 `;
@@ -154,9 +160,10 @@ const SellerName = styled.p`
 `;
 
 const Title = styled.h4`
-  font-size: 14px;
-  margin: 5px 0 0 0; /* 상단 여백 1px */
-  font-weight: bold;
+  font-size: 1rem;
+  margin: 5px 0 0 0;
+  margin-top: 10px;
+  font-weight: 500;
   color: #222;
 `;
 

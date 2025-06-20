@@ -13,8 +13,8 @@ const GlobalStyle = createGlobalStyle`
 
   #root {
     width: 100%;
-    max-width: 390px;
-    background:#ffebeb;
+    max-width: 380px;
+    background:#ffffff;
     min-height: 100vh;
     display: flex;
     flex-direction: column;
