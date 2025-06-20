@@ -8,7 +8,6 @@ import sukreamTitle from '../../assets/images/SUKREAM.svg';
 import naver from '../../assets/images/naver.svg';
 import kakao from '../../assets/images/kakao.svg';
 
-import styled from 'styled-components';
 
 export const LoginPage = () => {
   const navigate = useNavigate();
