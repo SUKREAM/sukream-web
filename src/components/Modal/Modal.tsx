@@ -35,7 +35,7 @@ export default function Modal({
   
   return (
     <ModalLayout onClose={onClose} open={open} width={width} show={show}>
-      <div style={{ paddingBottom: '30px' }}>
+      <div style={{ paddingBottom: '10px' }}>
         {title && <p className="modal-title">{title}</p>}
         {subtitle && <p className="modal-sub-title">{subtitle}</p>}
       </div>

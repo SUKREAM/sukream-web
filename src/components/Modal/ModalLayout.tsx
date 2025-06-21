@@ -17,7 +17,7 @@ export default function ModalLayout({
 	open,
 	show, 
 	onClose,
-	width = '720px',
+	width = '330px',
 }: IProps) {
 
 	return open ? (

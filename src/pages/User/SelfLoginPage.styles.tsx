@@ -19,6 +19,13 @@ export const StyledInput = styled.input<{ isError?: boolean }>`
         color: #aaa;
     }
 `;
+export const SuccessMessage = styled.p`
+  color: #52c41a;
+  font-size: 14px;
+  margin-top: 12px;
+    text-align: center;
+`;
+
 
 export const OptionsRow = styled.div`
     display: flex;

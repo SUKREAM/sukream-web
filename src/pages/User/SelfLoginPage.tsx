@@ -7,6 +7,9 @@ import { useLogin } from './hooks/useLogin';
 import { setStoredUser, getStoredUser } from "../../utils/userStorage";
 
 import * as S from './SelfLoginPage.styles';
+import { FindEmailModal } from './component/FindEmailModal';
+import { useModal } from '../../hooks/useModal';
+import { FindPasswordModal } from './component/FindPasswordModal';
 
 export const SelfLoginPage = () => {
 const navigate = useNavigate();
@@ -14,6 +17,8 @@ const navigate = useNavigate();
 const [email, setEmail] = useState('');
 const [pw, setPw] = useState('');
 const [touched, setTouched] = useState({ email: false, pw: false });
+const { secondModalOpen, modalOpen } = useModal();
+
 
 const { mutate: login } = useLogin();
 
@@ -38,6 +43,7 @@ const handleLogin = () => {
 
 
 return (
+    <>
     <Container showBackButton={true} title="로그인">
     <S.Title>자체 로그인</S.Title>
 
@@ -77,9 +83,9 @@ return (
         아이디 저장
         </label>
         <S.LinkGroup>
-        <S.LinkText>아이디 찾기</S.LinkText>
+        <S.LinkText onClick={secondModalOpen}>아이디 찾기</S.LinkText>
         <S.Divider>|</S.Divider>
-        <S.LinkText>비밀번호 찾기</S.LinkText>
+        <S.LinkText onClick={modalOpen}>비밀번호 찾기</S.LinkText>
         </S.LinkGroup>
     </S.OptionsRow>
 
@@ -97,6 +103,9 @@ return (
         로그인
     </BasicButton>
     </Container>
+    <FindEmailModal/>
+    <FindPasswordModal/>
+    </>
 );
 };
 

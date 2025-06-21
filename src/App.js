@@ -21,10 +21,10 @@ function App() {
 		<QueryClientProvider client={queryClient}>
 			<RecoilRoot>
 				<ConfigProvider>
-        <RouterProvider router={router} />
+					<RouterProvider router={router} />
 				</ConfigProvider>
 			</RecoilRoot>
-      <ReactQueryDevtools initialIsOpen={false} />
+			<ReactQueryDevtools initialIsOpen={false} />
 		</QueryClientProvider>
 	);
 }
