@@ -102,6 +102,14 @@ const SellerProductDetailPage = () => {
   };
 
   const handleSave = () => {
+    const deadlineDate = new Date(formData.deadline);
+    const createdAtDate = new Date(product.createdAt);
+
+    if (deadlineDate <= createdAtDate) {
+      alert("마감 기한은 등록일보다 이후여야 합니다.");
+      return;
+    }
+
     const updatedData = {
       ...formData,
       status: reverseStatusMap[formData.status],

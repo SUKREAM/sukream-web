@@ -53,6 +53,8 @@ const ProductAddPage = () => {
     const min = parseInt(form.minPrice);
     const max = parseInt(form.maxPrice);
     const bidUnit = parseInt(form.bidUnit);
+    const deadlineDate = new Date(form.deadline);
+    const now = new Date();
 
     if (isNaN(min) || isNaN(max) || isNaN(bidUnit)) {
       alert("입찰 금액이나 단위는 숫자여야 합니다.");
@@ -61,6 +63,11 @@ const ProductAddPage = () => {
 
     if (max <= min) {
       alert("최대금액은 최소금액보다 커야 합니다.");
+      return;
+    }
+
+    if (deadlineDate <= now) {
+      alert("마감일시는 현재 시간보다 이후여야 합니다.");
       return;
     }
 
