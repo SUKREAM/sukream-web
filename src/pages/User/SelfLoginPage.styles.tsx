@@ -80,7 +80,7 @@ export const Label = styled.label`
 
 export const ErrorMessage = styled.div<{ isError?: boolean }>`
     font-size: 12px;
-    color: ${({ isError }) => (isError ? '#ff6b6b' : '#ccc')};
+    color: ${({ isError }) => (isError ? '#ccc': '#ff6b6b')};
     margin-top: 0px;
     margin-bottom: 12px;
 `;

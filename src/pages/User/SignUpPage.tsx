@@ -131,7 +131,7 @@ export const SignUpPage = () => {
           placeholder="비밀번호 재입력"
         />
         {touched.confirmPassword && form.confirmPassword && (
-          <S.ErrorMessage isError={form.password !== form.confirmPassword}>
+          <S.ErrorMessage isError={form.password == form.confirmPassword}>
           {form.password === form.confirmPassword
             ? '✅ 비밀번호가 일치합니다.'
             : '❌ 비밀번호가 일치하지 않습니다.'}
