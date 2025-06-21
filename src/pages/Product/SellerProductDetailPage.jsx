@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import styled from "styled-components";
+import defaultImg from "../../assets/images/bread.svg";
 import { useParams, useNavigate } from "react-router-dom";
 import { axiosInstance } from "../../axios/axiosInstance";
 
@@ -180,26 +181,28 @@ const SellerProductDetailPage = () => {
         <Subtitle>
           등록일자 {new Date(product.createdAt).toLocaleDateString()}
         </Subtitle>
-        <Seller>판매자 {product.sellerName}</Seller>
+        <Seller>판매자: {product.sellerName}</Seller>
         <TitleInput
           name="title"
           value={formData.title}
           onChange={handleChange}
         />
-        <ImageWrapper onClick={handleImageClick} style={{ cursor: "pointer" }}>
-          {imagePreview ? (
-            <img src={imagePreview} alt="미리보기" />
-          ) : product.image ? (
-            <img
-              src={`data:image/png;base64,${product.image}`}
-              alt={product.title}
-            />
-          ) : (
-            "이미지가 없습니다."
-          )}
-          <OverlayText className="overlay">
-            수정하려면 여기를 클릭하세요
-          </OverlayText>
+        <ImageWrapper onClick={handleImageClick}>
+          <img
+            src={
+              imagePreview
+                ? imagePreview
+                : product.image
+                  ? `data:image/png;base64,${product.image}`
+                  : defaultImg
+            }
+            alt="상품 이미지"
+            onError={(e) => {
+              e.currentTarget.onerror = null;
+              e.currentTarget.src = defaultImg;
+            }}
+          />
+          <OverlayText className="overlay">수정하려면 여기를 클릭하세요</OverlayText>
         </ImageWrapper>
 
         <input
@@ -344,7 +347,6 @@ const ImageWrapper = styled.div`
   margin-bottom: 20px;
   border-radius: 10px;
   overflow: hidden;
-  background: #f5f5f5;
   display: flex;
   justify-content: center;
   align-items: center;

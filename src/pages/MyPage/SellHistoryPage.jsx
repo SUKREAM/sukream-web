@@ -60,8 +60,8 @@ const StatusBadge = styled.span`
   font-size: 0.75rem;          // 텍스트 크기 줄이기
   background-color: ${({ status }) =>
     status === "AWARDED" ? "#28a745" :
-    status === "OPEN" ? "#1976d2" :
-    "#9e9e9e"};
+      status === "OPEN" ? "#1976d2" :
+        "#9e9e9e"};
 `;
 
 const DaysAgo = styled.span`
@@ -192,6 +192,10 @@ const SellHistoryPage = () => {
                     : defaultImg
                 }
                 alt={item.productName}
+                onError={(e) => {
+                  e.currentTarget.onerror = null;
+                  e.currentTarget.src = defaultImg;
+                }}
               />
               <InfoSection>
                 <StatusRow>

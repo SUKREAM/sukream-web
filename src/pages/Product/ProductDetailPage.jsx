@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
+import defaultImg from "../../assets/images/bread.svg";
 import { Link, useParams } from "react-router-dom";
 import { axiosInstance } from "../../axios/axiosInstance";
 
@@ -115,16 +116,20 @@ const ProductDetailPage = () => {
         </TitleRow>
 
         <ImageWrapper>
-          {product.image ? (
-            <img
-              src={`data:image/png;base64,${product.image}`}
-              alt={product.title}
-            />
-          ) : (
-            "이미지가 없습니다."
-          )}
+          <img
+            src={
+              product.image
+                ? `data:image/png;base64,${product.image}`
+                : defaultImg
+            }
+            alt={product.title || "상품 이미지"}
+            onError={(e) => {
+              e.currentTarget.onerror = null;
+              e.currentTarget.src = defaultImg;
+            }}
+          />
         </ImageWrapper>
-
+        
         <PriceWrapper>
           <span className="label">현재 최고가</span>
           <span className="price">
@@ -235,7 +240,6 @@ const ImageWrapper = styled.div`
   margin: auto;
   border-radius: 10px;
   overflow: hidden;
-  background: #f5f5f5;
   display: flex;
   justify-content: center;
   align-items: center;
