@@ -53,12 +53,12 @@ const StatusRow = styled.div`
 
 const StatusBadge = styled.span`
   padding: 4px 10px;
-  border-radius: 16px;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
   color: white;
-  font-weight: 700;
-  font-size: 0.9rem;
   background-color: ${({ status }) =>
-    status === "낙찰완료" ? "#28a745" : "#f39c12"};
+    status === "낙찰완료" ? "#F76059" : "#bbb"};
 `;
 
 const DaysAgo = styled.span`
@@ -73,34 +73,38 @@ const ProductName = styled.p`
 `;
 
 const ButtonGroup = styled.div`
-  margin-top: 12px;
   display: flex;
-  flex-wrap: wrap;
   gap: 8px;
+  margin-top: 10px;
+  flex-wrap: wrap;
 `;
 
 const ActionButton = styled.button`
-  background-color: #1976d2;
-  border: none;
-  border-radius: 8px;
-  padding: 10px 14px;
+  background-color: #F76059;
   color: white;
+  border: none;
+  padding: 6px 10px;
+  font-size: 0.75rem;
   font-weight: 600;
+  border-radius: 6px;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  white-space: nowrap;
+  max-width: 100px;
 
   &:hover {
-    background-color: #0f4a8c;
+    background-color: #e05049;
   }
 `;
 
 const DisabledButton = styled.div`
-  background-color: #bbb;
-  padding: 10px 14px;
-  border-radius: 8px;
+  background-color: #ccc;
   color: white;
+  font-size: 0.75rem;
   font-weight: 600;
-  display: inline-block;
+  border-radius: 6px;
+  padding: 6px 10px;
+  max-width: 100px;
+  white-space: nowrap;
 `;
 
 const groupItemsByDate = (items) => {
@@ -193,7 +197,7 @@ const BuyHistoryPage = () => {
                   </ActionButton>
                   {item.status === "낙찰완료" &&
                     (item.reviewWritten ? (
-                      <DisabledButton>리뷰 작성 완료</DisabledButton>
+                      <DisabledButton>리뷰작성완료</DisabledButton>
                     ) : (
                       <ActionButton
                         onClick={() =>
@@ -202,7 +206,7 @@ const BuyHistoryPage = () => {
                           })
                         }
                       >
-                        리뷰 작성
+                        리뷰작성
                       </ActionButton>
                     ))}
                 </ButtonGroup>

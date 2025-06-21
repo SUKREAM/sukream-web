@@ -52,13 +52,15 @@ const StatusRow = styled.div`
 `;
 
 const StatusBadge = styled.span`
-  padding: 4px 10px;
-  border-radius: 16px;
+  padding: 2px 8px;             // 패딩 줄이기
+  border-radius: 12px;         // 둥글게는 유지
   color: white;
-  font-weight: 700;
-  font-size: 0.9rem;
+  font-weight: 600;            // 굵기 살짝 줄임
+  font-size: 0.75rem;          // 텍스트 크기 줄이기
   background-color: ${({ status }) =>
-    status === "AWARDED" ? "#28a745" : status === "OPEN" ? "#1976d2" : "#9e9e9e"};
+    status === "AWARDED" ? "#28a745" :
+    status === "OPEN" ? "#1976d2" :
+    "#9e9e9e"};
 `;
 
 const DaysAgo = styled.span`
@@ -75,40 +77,48 @@ const ProductName = styled.p`
 const ButtonGroup = styled.div`
   margin-top: 12px;
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   gap: 8px;
 `;
 
-const ActionButton = styled.button`
-  background-color: #1976d2;
-  border: none;
-  border-radius: 8px;
-  padding: 10px 14px;
-  color: white;
+const ButtonBase = styled.button`
+  padding: 6px 10px;           // 버튼을 작게
+  min-width: auto;             // 너비 자동 조절
+  max-width: 130px;            // 너무 넓어지지 않게 제한
+  border-radius: 6px;
   font-weight: 600;
+  font-size: 0.8rem;           // 글씨도 약간 줄임
   cursor: pointer;
-  transition: background-color 0.3s ease;
-  width: fit-content;
-
-  &:hover {
-    background-color: #0f4a8c;
-  }
-`;
-
-const LinkButton = styled(Link)`
-  background-color: #888;
-  padding: 10px 14px;
-  border-radius: 8px;
   color: white;
-  font-weight: 600;
-  text-decoration: none;
-  display: inline-block;
-  transition: background-color 0.3s ease;
+  border: none;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.2;
+  text-align: center;
+  flex-shrink: 0;              // 줄어들지 않게 고정
+`;
+
+
+
+const ActionButton = styled(ButtonBase)`
+  background-color: #F76059;
 
   &:hover {
-    background-color: #555;
+    background-color: #e05049;
   }
 `;
+
+const LinkButton = styled(ButtonBase).attrs({ as: Link })`
+  background-color: #F76059;
+  text-decoration: none;
+
+  &:hover {
+    background-color: #e05049;
+  }
+`;
+
+
 
 const groupItemsByDate = (items) => {
   return items.reduce((groups, item) => {
@@ -211,7 +221,7 @@ const SellHistoryPage = () => {
                   )}
                   {/* 상세 페이지로 이동 */}
                   <LinkButton to={`/products/seller/${item.productId}`}>
-                    판매자 페이지로 이동 
+                    상품 판매 관리
                   </LinkButton>
                 </ButtonGroup>
               </InfoSection>
