@@ -295,9 +295,6 @@ const SellerProductDetailPage = () => {
         <ButtonRow>
           <ActionButton onClick={handleSave}>상품 수정하기</ActionButton>
           <ActionButton onClick={handleDelete}>상품 삭제하기</ActionButton>
-          <ActionButton onClick={() => navigate(`/award-management`)}>
-            입찰자 조회
-          </ActionButton>
         </ButtonRow>
       </Main>
     </PageWrapper>
