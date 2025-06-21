@@ -56,7 +56,7 @@ const router = createBrowserRouter([
       { path: "mypage/sell", element: <SellHistoryPage /> },
 
       // 경매 관련 라우트
-      { path: "award-management", element: <AwardManagementPage /> },
+      { path: "award-management/:productId", element: <AwardManagementPage /> },
     ],
   },
 ]);
