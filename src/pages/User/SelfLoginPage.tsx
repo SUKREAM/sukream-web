@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import BasicButton from '../../components/Button';
 import Container from '../../components/Container/Container';
 import { useLogin } from './hooks/useLogin';
-import { setStoredUser, getStoredUser } from "../../utils/userStorage";
+import { setStoredUser, removeStoredEmail, getStoredEmail, setStoredEmail } from "../../utils/userStorage";
 
 import * as S from './SelfLoginPage.styles';
 import { FindEmailModal } from './component/FindEmailModal';
@@ -18,12 +18,14 @@ const [email, setEmail] = useState('');
 const [pw, setPw] = useState('');
 const [touched, setTouched] = useState({ email: false, pw: false });
 const { secondModalOpen, modalOpen } = useModal();
+const [saveEmail, setSaveEmail] = useState(false);
 
 
 const { mutate: login } = useLogin();
 
 const handleLogin = () => {
     if (!email || !pw) return;
+    if (saveEmail) setStoredEmail(email);
 
     login(
         { email, pw },
@@ -40,6 +42,13 @@ const handleLogin = () => {
     );
 };
 
+useEffect(() => {
+    const saved = getStoredEmail();
+    if (saved) {
+        setEmail(saved);
+        setSaveEmail(true);
+    }
+}, []);
 
 
 return (
@@ -78,10 +87,18 @@ return (
     </S.InputWrapper>
 
     <S.OptionsRow>
-        <label>
-        <input type="checkbox" />
-        아이디 저장
-        </label>
+    <label>
+    <input
+    type="checkbox"
+    checked={saveEmail}
+    onChange={(e) => {
+        const checked = e.target.checked;
+        setSaveEmail(checked);
+        if (!checked) removeStoredEmail();
+    }}
+    />
+    아이디 저장
+    </label>
         <S.LinkGroup>
         <S.LinkText onClick={secondModalOpen}>아이디 찾기</S.LinkText>
         <S.Divider>|</S.Divider>
