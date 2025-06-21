@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import defaultImg from "../../assets/images/bread.svg";
 
 const PageWrapper = styled.div`
   padding: 20px;
@@ -173,9 +174,10 @@ const BuyHistoryPage = () => {
           <DateTitle>{date}</DateTitle>
           {groupedItems[date].map((item) => (
             <ItemCard key={item.id}>
-              <ItemImage
-                src={item.productImage || "/default.png"}
-                alt={item.productName}
+            <ItemImage
+             src={item.productImage || defaultImg}
+              onError={(e) => (e.target.src = defaultImg)} // fallback
+              alt={item.productName}
               />
               <InfoSection>
                 <StatusRow>
