@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { useNavigate, Link } from "react-router-dom";
 import axios from "axios";
+import defaultImg from "../../assets/images/bread.svg";
 
 const PageWrapper = styled.div`
   padding: 20px;
@@ -188,7 +189,7 @@ const SellHistoryPage = () => {
                 src={
                   item.productImage
                     ? `data:image/png;base64,${item.productImage}`
-                    : "/default.png"
+                    : defaultImg
                 }
                 alt={item.productName}
               />
