@@ -9,7 +9,7 @@ export const BidderList = ({ productId, token }) => {
     // 입찰자 목록 불러오기
     const fetchBidders = async () => {
         try {
-            const res = await axios.get(`/api/products/${productId}/bidders`, {
+            const res = await axios.get(`http://localhost:8080/api/products/${productId}/bidders`, {
                 headers: { Authorization: `Bearer ${token}` },
             });
             if (res.data && res.data.success) {
@@ -34,11 +34,9 @@ export const BidderList = ({ productId, token }) => {
     // 낙찰하기 API 호출
     const handleAward = async (bidderId) => {
         try {
-            const res = await axios.post(
-                `/api/products/${productId}/bidders/award/${bidderId}`,
-                null,
-                { headers: { Authorization: `Bearer ${token}` } }
-            );
+            const res = await axios.get(`http://localhost:8080/api/products/${productId}/bidders`, {
+                headers: { Authorization: `Bearer ${token}` },
+            });
             alert(res.data.errorMsg || "낙찰 완료!");
             setAwardedBidderId(bidderId);
             fetchBidders();
