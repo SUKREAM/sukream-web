@@ -2,23 +2,30 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import "../styles/AuctionStatusBox.css";
 
-export const AuctionStatusBox = ({ productId, token }) => {
+export const AuctionStatusBox = ({ productId, token, onProductInfoLoaded }) => {
     const [productInfo, setProductInfo] = useState({
         title: "",
         timeRemaining: "",
-        highestBid: 0
+        highestBid: 0,
     });
 
     useEffect(() => {
         const fetchProductInfo = async () => {
             try {
-                const response = await axios.get(`/api/products/${productId}/bidders/info`, {
+                const response = await axios.get(`http://localhost:8080/api/products/${productId}/bidders/info`, {
                     headers: {
-                        Authorization: `Bearer ${token}`
-                    }
+                        Authorization: `Bearer ${token}`,
+                    },
                 });
-                const { title, timeRemaining, highestBid } = response.data.data; // 여기 수정
+
+                const { title, timeRemaining, highestBid, image } = response.data.data;
+
                 setProductInfo({ title, timeRemaining, highestBid });
+
+                if (onProductInfoLoaded) {
+                    onProductInfoLoaded({ title, timeRemaining, highestBid, image });
+                }
+
             } catch (error) {
                 console.error("상품 정보를 불러오는 데 실패했습니다:", error);
             }
@@ -27,7 +34,7 @@ export const AuctionStatusBox = ({ productId, token }) => {
         if (productId && token) {
             fetchProductInfo();
         }
-    }, [productId, token]);
+    }, [productId, token, onProductInfoLoaded]);
 
     return (
         <>
@@ -46,7 +53,9 @@ export const AuctionStatusBox = ({ productId, token }) => {
                     </div>
                     <div className="status-card">
                         <div className="status-title">최고 입찰가</div>
-                        <div className="status-value">₩{productInfo.highestBid.toLocaleString()}</div>
+                        <div className="status-value">
+                            ₩{productInfo.highestBid.toLocaleString()}
+                        </div>
                     </div>
                 </div>
                 <p className="status-caption">

@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useState } from "react"; 
+import { useParams } from "react-router-dom"; 
 import styled from "styled-components";
 import { BidderList } from "../../components/BidderList";
 import { AuctionStatusBox } from "../../components/AuctionStatusBox";
@@ -38,13 +39,26 @@ const Description = styled.p`
 `;
 
 const AwardManagementPage = () => {
-  const token = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJqaXdvb0BnbWFpbC5jb20iLCJuYW1lIjoi7KeA7JqwIiwiaWF0IjoxNzUwNDAyNDQ5LCJleHAiOjE3NTA0MDYwNDl9.FUezmdu4s7W_WHJoHMcOF0eFKFEN5eFa1L5fep0_wqg";
-  const productId = 144; // 실제 조회할 상품 ID로 대체
+  const { productId } = useParams();
+  const token = localStorage.getItem("jwt");
+  const [image, setImage] = useState(null);
+
+  const handleProductInfoLoaded = (info) => {
+    setImage(info.image);
+  };
+
+  if (!token || !productId) {
+    return <p>잘못된 접근입니다.</p>;
+  }
 
   return (
     <PageWrapper>
-      <AuctionImage />
-      <AuctionStatusBox productId={productId} token={token} />
+      <AuctionImage image={image} />
+      <AuctionStatusBox
+        productId={productId}
+        token={token}
+        onProductInfoLoaded={handleProductInfoLoaded}
+      />
       <BidderList productId={productId} token={token} />
     </PageWrapper>
   );

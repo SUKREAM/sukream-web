@@ -1,51 +1,17 @@
-import React, { useState } from "react";
+import React from "react";
 import "../styles/AuctionImage.css";
-import img1 from "../assets/images/bag1.svg"
-import img2 from "../assets/images/bag2.svg"
-import img3 from "../assets/images/bag3.svg"
 
-const images = [img1, img2, img3];
-
-export const AuctionImage = () => {
-  const [currentIndex, setCurrentIndex] = useState(0);
-
-  const handlePrev = () => {
-    setCurrentIndex((prevIndex) =>
-      prevIndex === 0 ? images.length - 1 : prevIndex - 1
-    );
-  };
-
-  const handleNext = () => {
-    setCurrentIndex((prevIndex) =>
-      prevIndex === images.length - 1 ? 0 : prevIndex + 1
-    );
-  };
+export const AuctionImage = ({ image }) => {
+  if (!image) return null;
 
   return (
     <div className="auction-image-wrapper">
-      <div className="slider-container">
-        <button className="arrow left" onClick={handlePrev}>
-          ❮
-        </button>
-
+      <div className="single-image-container">
         <img
-          src={images[currentIndex]}
-          alt={`Auction ${currentIndex + 1}`}
-          className="slider-image"
+          src={`data:image/jpeg;base64,${image}`}
+          alt="경매 상품 이미지"
+          className="single-auction-image"
         />
-
-        <button className="arrow right" onClick={handleNext}>
-          ❯
-        </button>
-      </div>
-
-      <div className="indicator-container">
-        {images.map((_, idx) => (
-          <span
-            key={idx}
-            className={`indicator-dot ${currentIndex === idx ? "active" : ""}`}
-          />
-        ))}
       </div>
     </div>
   );
