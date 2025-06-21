@@ -75,17 +75,12 @@ const ProductDetailPage = () => {
   const handleBidSubmit = () => {
     const token = localStorage.getItem("jwt");
 
-    // 임시. 일단은 "익명"으로 저장되게
-    // 백에서 유저 로그인 한 name받아와서 넣는 거로 수정하셈
-    const nickname = "익명";
-
     if (!token) {
       alert("로그인이 필요합니다.");
       return;
     }
     const data = {
       price: bidPrice,
-      nickname: nickname,
     };
 
     axiosInstance
