@@ -197,7 +197,7 @@ const BuyHistoryPage = () => {
                     ) : (
                       <ActionButton
                         onClick={() =>
-                          navigate(`/reviews/write/${item.id}`, {
+                          navigate(`/reviews/write/${item.productId}`, {
                             state: item,
                           })
                         }
