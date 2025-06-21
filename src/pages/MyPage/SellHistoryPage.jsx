@@ -59,8 +59,8 @@ const StatusBadge = styled.span`
   font-size: 0.75rem;          // 텍스트 크기 줄이기
   background-color: ${({ status }) =>
     status === "AWARDED" ? "#28a745" :
-      status === "OPEN" ? "#1976d2" :
-        "#9e9e9e"};
+    status === "OPEN" ? "#1976d2" :
+    "#9e9e9e"};
 `;
 
 const DaysAgo = styled.span`
@@ -183,15 +183,7 @@ const SellHistoryPage = () => {
         <DateGroup key={date}>
           <DateTitle>{date}</DateTitle>
           {groupedItems[date].map((item) => (
-            <ItemCard
-              key={item.productId}
-              onClick={() => {
-                if (item.status === "OPEN") {
-                  navigate(`/award-management/${item.productId}`);
-                }
-              }}
-              style={{ cursor: item.status === "OPEN" ? "pointer" : "default" }}
-            >
+            <ItemCard key={item.productId}>
               <ItemImage
                 src={
                   item.productImage
@@ -199,13 +191,6 @@ const SellHistoryPage = () => {
                     : "/default.png"
                 }
                 alt={item.productName}
-                onClick={(e) => {
-                  e.stopPropagation(); // 카드 클릭 중첩 방지
-                  if (item.status === "OPEN") {
-                    navigate(`/award-management/${item.productId}`);
-                  }
-                }}
-                style={{ cursor: item.status === "OPEN" ? "pointer" : "default" }}
               />
               <InfoSection>
                 <StatusRow>
@@ -218,35 +203,30 @@ const SellHistoryPage = () => {
                 <ButtonGroup>
                   {item.status === "OPEN" && (
                     <ActionButton
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        navigate(`/award-management/${item.productId}`);
-                      }}
+                      onClick={() =>
+                        navigate(`/award-management/${item.productId}`)
+                      }
                     >
                       입찰 요청 보기
                     </ActionButton>
                   )}
                   {item.status === "AWARDED" && (
                     <ActionButton
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        navigate(`/reviews?productId=${item.productId}`);
-                      }}
+                      onClick={() =>
+                        navigate(`/reviews?productId=${item.productId}`)
+                      }
                     >
                       받은 후기 보기
                     </ActionButton>
                   )}
-                  <LinkButton
-                    to={`/products/seller/${item.productId}`}
-                    onClick={(e) => e.stopPropagation()}
-                  >
+                  {/* 상세 페이지로 이동 */}
+                  <LinkButton to={`/products/seller/${item.productId}`}>
                     상품 판매 관리
                   </LinkButton>
                 </ButtonGroup>
               </InfoSection>
             </ItemCard>
           ))}
-
         </DateGroup>
       ))}
     </PageWrapper>
