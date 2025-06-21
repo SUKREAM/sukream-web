@@ -102,21 +102,22 @@ const ButtonBase = styled.button`
 
 
 const ActionButton = styled(ButtonBase)`
-  background-color: #f8b8c7;
+  background-color: #F76059;
 
   &:hover {
-    background-color: #f48ca6;
+    background-color: #e05049;
   }
 `;
 
 const LinkButton = styled(ButtonBase).attrs({ as: Link })`
-  background-color: #f8b8c7;
+  background-color: #F76059;
   text-decoration: none;
 
   &:hover {
-    background-color: #f48ca6;
+    background-color: #e05049;
   }
 `;
+
 
 
 const groupItemsByDate = (items) => {
