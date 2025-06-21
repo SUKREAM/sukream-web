@@ -144,30 +144,25 @@ const ProductDetailPage = () => {
         <OpenLink>오픈채팅방 링크: {product.chatLink} </OpenLink>
 
         <InfoRow>
+          <strong>경매 번호</strong>
+          <span>{product.auctionNum}</span>
+        </InfoRow>
+        <InfoRow>
           <strong>남은 시간</strong>
           <span>{timeLeft}</span>
         </InfoRow>
-
         <InfoRow>
           <strong>마감 일시</strong>
           <span>{new Date(product.deadline).toLocaleString()}</span>
         </InfoRow>
-
         <InfoRow>
           <strong>경매 상태</strong>
           <span>{product.status}</span>
         </InfoRow>
-
-        <InfoRow>
-          <strong>경매 번호</strong>
-          <span>{product.auctionNum}</span>
-        </InfoRow>
-
         <InfoRow>
           <strong>입찰 단위</strong>
           <span>{product.bidUnit.toLocaleString()}원</span>
         </InfoRow>
-
         <InfoRow>
           <strong>입찰 수</strong>
           <span>{product.bidCount}</span>
@@ -224,6 +219,8 @@ const TitleRow = styled.div`
   justify-content: space-between;
   align-items: baseline;
   margin-bottom: 8px;
+  width: 95%;
+  margin: auto;
 `;
 
 const Title = styled.h1`
@@ -237,9 +234,10 @@ const Subtitle = styled.div`
 `;
 
 const ImageWrapper = styled.div`
-  width: 100%;
+  width: 97%;
   height: 260px;
   margin-bottom: 10px;
+  margin: auto;
   border-radius: 10px;
   overflow: hidden;
   background: #f5f5f5;

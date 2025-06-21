@@ -6,6 +6,7 @@ import logoImg from "../assets/images/logo.svg";
 import mypageImg from "../assets/images/myBtn.svg";
 
 const HeaderWrapper = styled.header`
+  width: 100%;
   margin: auto;
   background: #ffffff;
   color: #fff;
@@ -17,6 +18,7 @@ const HeaderWrapper = styled.header`
 const Logo = styled(Link)`
   display: flex;
   align-items: center;
+  margin: 10px;
 `;
 
 const LogoImg = styled.img`
