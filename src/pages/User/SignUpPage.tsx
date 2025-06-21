@@ -9,17 +9,20 @@ export const SignUpPage = () => {
   const navigate = useNavigate();
 
   const [form, setForm] = useState({
-    username: '',
+    name: '',
     password: '',
     confirmPassword: '',
-    name: '',
     email: '',
-    phone: '',
+    phoneNumber: '',
     gender: '',
     birthYear: '',
     birthMonth: '',
     birthDay: '',
   });
+
+  const isPasswordValid = (password: string) =>
+    /^(?=.*[A-Za-z])(?=.*\d)(?=.*[!@#$%^&*()_+])[A-Za-z\d!@#$%^&*()_+]{8,15}$/.test(password);
+  
 
   const [touched, setTouched] = useState<{ [key: string]: boolean }>({});
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
@@ -35,17 +38,49 @@ export const SignUpPage = () => {
       const newErrors = { ...errors };
       delete newErrors[field];
       setErrors(newErrors);
+
+      if (field === 'password' && !isPasswordValid(value)) {
+        newErrors.password = '비밀번호는 8~15자 영문+숫자+특수문자 조합이어야 합니다.';
+      }
+
+      if (field === 'confirmPassword' && value !== form.password) {
+        newErrors.confirmPassword = '비밀번호가 일치하지 않습니다.';
+      }
+
+      if (field === 'password' && form.confirmPassword && value !== form.confirmPassword) {
+        newErrors.confirmPassword = '비밀번호가 일치하지 않습니다.';
+      }
+
+      if (field === 'confirmPassword' && value === form.password) {
+        delete newErrors.confirmPassword;
+      }
     }
+  };
+
+  const isFormValid = () => {
+    return (
+      form.email &&
+      form.password &&
+      form.confirmPassword &&
+      form.name &&
+      form.phoneNumber &&
+      form.gender &&
+      form.birthYear &&
+      form.birthMonth &&
+      form.birthDay &&
+      isPasswordValid(form.password) &&
+      form.password === form.confirmPassword &&
+      Object.keys(errors).length === 0
+    );
   };
 
   const fieldNameToLabel = (field: string) => {
     switch (field) {
-      case 'username': return '아이디';
       case 'password': return '비밀번호';
       case 'confirmPassword': return '비밀번호 재입력';
       case 'name': return '이름';
       case 'email': return '이메일';
-      case 'phone': return '휴대전화 번호';
+      case 'phoneNumber': return '휴대전화 번호';
       case 'gender': return '성별';
       case 'birthYear': return '생년월일';
       default: return field;
@@ -69,13 +104,13 @@ export const SignUpPage = () => {
       <S.Title>일반 회원가입</S.Title>
 
       <S.InputWrapper>
-        <S.Label>아이디 *</S.Label>
+        <S.Label>이메일 *</S.Label>
         <S.StyledInput
-          value={form.username}
-          onChange={(e) => handleChange('username', e.target.value)}
-          placeholder="예) creampuff123"
+          value={form.email}
+          onChange={(e) => handleChange('email', e.target.value)}
+          placeholder="예) creampuff123@gmail.com"
         />
-        {touched.username && errors.username && <S.ErrorMessage>{errors.username}</S.ErrorMessage>}
+        {touched.email && errors.email && <S.ErrorMessage>{errors.email}</S.ErrorMessage>}
       </S.InputWrapper>
 
       <S.InputWrapper>
@@ -95,6 +130,13 @@ export const SignUpPage = () => {
           onChange={(e) => handleChange('confirmPassword', e.target.value)}
           placeholder="비밀번호 재입력"
         />
+        {touched.confirmPassword && form.confirmPassword && (
+          <S.ErrorMessage isError={form.password !== form.confirmPassword}>
+          {form.password === form.confirmPassword
+            ? '✅ 비밀번호가 일치합니다.'
+            : '❌ 비밀번호가 일치하지 않습니다.'}
+          </S.ErrorMessage>
+        )}
       </S.InputWrapper>
 
       <S.InputWrapper>
@@ -107,20 +149,10 @@ export const SignUpPage = () => {
       </S.InputWrapper>
 
       <S.InputWrapper>
-        <S.Label>이메일 *</S.Label>
-        <S.StyledInput
-          value={form.email}
-          onChange={(e) => handleChange('email', e.target.value)}
-          placeholder="예) creampuff123@gmail.com"
-        />
-        {touched.email && errors.email && <S.ErrorMessage>{errors.email}</S.ErrorMessage>}
-      </S.InputWrapper>
-
-      <S.InputWrapper>
         <S.Label>휴대전화 번호 *</S.Label>
         <S.StyledInput
-          value={form.phone}
-          onChange={(e) => handleChange('phone', e.target.value)}
+          value={form.phoneNumber}
+          onChange={(e) => handleChange('phoneNumber', e.target.value)}
           placeholder="예) 010-1234-5678"
         />
       </S.InputWrapper>
@@ -167,7 +199,12 @@ export const SignUpPage = () => {
         </S.BirthRow>
       </S.InputWrapper>
 
-      <BasicButton size="full" shape="square" social="email" onClick={handleSubmit}>
+      <BasicButton 
+      size="full" 
+      shape="square" 
+      social="email"   
+      disabled={!isFormValid()}
+      onClick={handleSubmit}>
         회원가입
       </BasicButton>
     </Container>

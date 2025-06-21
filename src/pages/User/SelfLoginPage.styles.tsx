@@ -20,12 +20,11 @@ export const StyledInput = styled.input<{ isError?: boolean }>`
     }
 `;
 export const SuccessMessage = styled.p`
-  color: #52c41a;
-  font-size: 14px;
-  margin-top: 12px;
+    color: #52c41a;
+    font-size: 14px;
+    margin-top: 12px;
     text-align: center;
 `;
-
 
 export const OptionsRow = styled.div`
     display: flex;
@@ -79,37 +78,37 @@ export const Label = styled.label`
 `;
 
 
-export const ErrorMessage = styled.div`
+export const ErrorMessage = styled.div<{ isError?: boolean }>`
     font-size: 12px;
-    color: #ff6b6b;
+    color: ${({ isError }) => (isError ? '#ff6b6b' : '#ccc')};
     margin-top: 0px;
     margin-bottom: 12px;
 `;
 
 export const GenderWrapper = styled.div`
-  display: flex;
-  gap: 8px;
+    display: flex;
+    gap: 8px;
 `;
 
 export const GenderButton = styled.button<{ selected: boolean }>`
-  flex: 1;
-  padding: 10px;
-  background-color: ${({ selected }) => (selected ? '#f66' : '#f0f0f0')};
-  color: ${({ selected }) => (selected ? '#fff' : '#000')};
-  border-radius: 6px;
-  border: none;
+    flex: 1;
+    padding: 10px;
+    background-color: ${({ selected }) => (selected ? '#f66' : '#f0f0f0')};
+    color: ${({ selected }) => (selected ? '#fff' : '#000')};
+    border-radius: 6px;
+    border: none;
 `;
 
 export const BirthRow = styled.div`
-  display: flex;
-  gap: 6px;
-  align-items: center;
+    display: flex;
+    gap: 6px;
+    align-items: center;
 `;
 
 export const BirthInput = styled.input`
-  width: 60px;
-  padding: 8px;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  text-align: center;
+    width: 60px;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    text-align: center;
 `;

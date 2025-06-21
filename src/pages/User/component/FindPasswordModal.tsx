@@ -6,7 +6,6 @@ import * as S from '../SelfLoginPage.styles';
 import { useFindPassword } from '../hooks/useFindPassword';
 
 export const FindPasswordModal  = () => {
-    const [form] = Form.useForm();
     const { isOpen, onClose } = useModal();
     const [email, setEmail] = useState('');
     const [touched, setTouched] = useState({ email: false });
@@ -17,11 +16,6 @@ export const FindPasswordModal  = () => {
         findPassword(email)
         console.log(isError)
     }
-
-
-    useEffect(() => {
-        form.resetFields();
-    }, [form, isOpen]);
 
     return (
     <>

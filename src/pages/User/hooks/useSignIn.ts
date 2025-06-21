@@ -3,12 +3,10 @@ import { axiosInstance } from '../../../axios/axiosInstance';
 import { API_LOGIN } from '../../../constants/apiList';
 
 interface SignInParams {
-    username: string;
     password: string;
-    confirmPassword: string;
     name: string;
     email: string;
-    phone: string;
+    phoneNumber: string;
     gender: string;
     birthYear: string;
     birthMonth: string;

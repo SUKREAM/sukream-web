@@ -6,14 +6,10 @@ import * as S from '../SelfLoginPage.styles';
 import { useFindEmail } from '../hooks/useFindEmail';
 
 export const FindEmailModal = () => {
-    const [form] = Form.useForm();
     const { isSecondOpen, onSecondClose } = useModal();
     const [phone, setPhone] = useState('');
     const [touched, setTouched] = useState({ phone: false });
 
-    useEffect(() => {
-        form.resetFields();
-    }, [form, isSecondOpen]);
 
     const { mutate: findEmail, isError, isSuccess } = useFindEmail();
 
