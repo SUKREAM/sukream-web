@@ -18,7 +18,7 @@ const ProductList = styled.div`
   grid-template-columns: repeat(3, 1fr);
   grid-template-rows: auto auto;
   gap: 12px;
-  max-width: 300px;
+  max-width: 320px;
   width: 100%;
   margin: 0 auto;
   height: 200px;
@@ -31,7 +31,7 @@ const ProductItem = styled.div`
   flex-direction: column;
   align-items: center;
   text-align: center;
-  position: relative; // 이거 추가
+  position: relative;
 
   &:nth-child(1) {
     grid-column: 2 / 3;
@@ -46,30 +46,39 @@ const ProductItem = styled.div`
     grid-row: 2 / 3;
   }
 `;
+
 const ProductLink = styled(Link)`
   display: flex;
   flex-direction: column;
   align-items: center;
   background: #fff;
   border-radius: 5px;
-  padding: 12px;
+  padding: 6px;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
   color: #222;
   text-decoration: none;
-  width: 75%;
-  height: 70px;
+  width: 90px; /* 고정 너비 */
+  height: 90px;
+  box-sizing: border-box;
 `;
 
 const ProductImage = styled.img`
   width: 60px;
   height: 60px;
   object-fit: contain;
-  margin-bottom: 8px;
+  margin-bottom: 4px;
+  flex-shrink: 0;
 `;
 
 const ProductTitle = styled.div`
   font-weight: 600;
-  font-size: 14px;
+  font-size: 12px;
+  width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-align: center;
+  display: block;
 `;
 
 const EmojiBadge = styled.div`
