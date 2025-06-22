@@ -23,6 +23,9 @@ export const SignUpPage = () => {
   const isPasswordValid = (password: string) =>
     /^(?=.*[A-Za-z])(?=.*\d)(?=.*[!@#$%^&*()_+])[A-Za-z\d!@#$%^&*()_+]{8,15}$/.test(password);
   
+  const isPhoneNumberValid = (phone: string) =>
+    /^010-\d{4}-\d{4}$/.test(phone);
+  
 
   const [touched, setTouched] = useState<{ [key: string]: boolean }>({});
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
@@ -31,31 +34,40 @@ export const SignUpPage = () => {
   const handleChange = (field: string, value: string) => {
     setForm({ ...form, [field]: value });
     setTouched({ ...touched, [field]: true });
-
+  
+    const newErrors = { ...errors };
+  
     if (value.trim() === '') {
-      setErrors({ ...errors, [field]: `${fieldNameToLabel(field)}을 입력해주세요.` });
+      newErrors[field] = `${fieldNameToLabel(field)}을 입력해주세요.`;
     } else {
-      const newErrors = { ...errors };
       delete newErrors[field];
-      setErrors(newErrors);
-
-      if (field === 'password' && !isPasswordValid(value)) {
-        newErrors.password = '비밀번호는 8~15자 영문+숫자+특수문자 조합이어야 합니다.';
+  
+      if (field === 'password') {
+        if (!isPasswordValid(value)) {
+          newErrors.password = '비밀번호는 8~15자 영문+숫자+특수문자 조합이어야 합니다.';
+        } else {
+          delete newErrors.password;
+        }
+  
+        if (form.confirmPassword && value !== form.confirmPassword) {
+          newErrors.confirmPassword = '비밀번호가 일치하지 않습니다.';
+        } else if (form.confirmPassword && value === form.confirmPassword) {
+          delete newErrors.confirmPassword;
+        }
       }
 
-      if (field === 'confirmPassword' && value !== form.password) {
-        newErrors.confirmPassword = '비밀번호가 일치하지 않습니다.';
-      }
-
-      if (field === 'password' && form.confirmPassword && value !== form.confirmPassword) {
-        newErrors.confirmPassword = '비밀번호가 일치하지 않습니다.';
-      }
-
-      if (field === 'confirmPassword' && value === form.password) {
-        delete newErrors.confirmPassword;
+      if (field === 'phoneNumber') {
+        if (!isPhoneNumberValid(value)) {
+          newErrors.phoneNumber = '휴대전화 번호는 010-0000-0000 형식이어야 합니다.';
+        } else {
+          delete newErrors.phoneNumber;
+        }
       }
     }
+  
+    setErrors(newErrors);
   };
+  
 
   const isFormValid = () => {
     return (
@@ -91,7 +103,7 @@ export const SignUpPage = () => {
     signin(form, {
       onSuccess: (data) => {
         console.log('회원가입 성공!', data);
-        // 페이지 이동 등 후처리
+        navigate("/")
       },
       onError: (err) => {
         console.error('회원가입 실패:', err);
@@ -121,6 +133,9 @@ export const SignUpPage = () => {
           onChange={(e) => handleChange('password', e.target.value)}
           placeholder="비밀번호 (8~15자 영문+숫자+특수문자 조합)"
         />
+        {touched.password && errors.password && (
+        <S.ErrorMessage>{errors.password}</S.ErrorMessage>
+        )}
       </S.InputWrapper>
 
       <S.InputWrapper>
@@ -146,6 +161,9 @@ export const SignUpPage = () => {
           onChange={(e) => handleChange('name', e.target.value)}
           placeholder="예) 홍길동"
         />
+        {touched.name && errors.name && (
+        <S.ErrorMessage>{errors.name}</S.ErrorMessage>
+        )}
       </S.InputWrapper>
 
       <S.InputWrapper>
@@ -155,6 +173,9 @@ export const SignUpPage = () => {
           onChange={(e) => handleChange('phoneNumber', e.target.value)}
           placeholder="예) 010-1234-5678"
         />
+        {touched.phoneNumber && errors.phoneNumber && (
+        <S.ErrorMessage>{errors.phoneNumber}</S.ErrorMessage>
+        )}
       </S.InputWrapper>
 
       <S.InputWrapper>
