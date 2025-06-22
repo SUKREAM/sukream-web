@@ -17,10 +17,6 @@ export const UserEditPage = () => {
         confirmPassword: '',
         email: '',
         phoneNumber: '',
-        gender: '',
-        birthYear: '',
-        birthMonth: '',
-        birthDay: '',
     });
 
     const [touched, setTouched] = useState<{ [key: string]: boolean }>({});
@@ -28,24 +24,12 @@ export const UserEditPage = () => {
 
     useEffect(() => {
       if (userInfo) {
-        const { name, email, phoneNumber, gender, birthDate } = userInfo;
-    
-        let birthYear = '';
-        let birthMonth = '';
-        let birthDay = '';
-    
-        if (birthDate) {
-          [birthYear, birthMonth, birthDay] = birthDate.split('-');
-        }
-    
+        const { name, email, phoneNumber } = userInfo;
+      
         setForm({
           name,
           email,
           phoneNumber,
-          gender,
-          birthYear,
-          birthMonth,
-          birthDay,
           password: '1234',
           confirmPassword: '1234',
         });
@@ -167,48 +151,6 @@ export const UserEditPage = () => {
               onChange={(e) => handleChange('phoneNumber', e.target.value)}
               placeholder="예) 010-1234-5678"
             />
-          </S.InputWrapper>
-      
-          <S.InputWrapper>
-            <S.Label>성별 *</S.Label>
-            <S.GenderWrapper>
-              <S.GenderButton
-                selected={form.gender === 'male'}
-                onClick={() => handleChange('gender', 'male')}
-              >
-                남성
-              </S.GenderButton>
-              <S.GenderButton
-                selected={form.gender === 'female'}
-                onClick={() => handleChange('gender', 'female')}
-              >
-                여성
-              </S.GenderButton>
-            </S.GenderWrapper>
-          </S.InputWrapper>
-      
-          <S.InputWrapper>
-            <S.Label>생년월일 *</S.Label>
-            <S.BirthRow>
-              <S.BirthInput
-                value={form.birthYear}
-                onChange={(e) => handleChange('birthYear', e.target.value)}
-                placeholder="2000"
-              />
-              <span>년</span>
-              <S.BirthInput
-                value={form.birthMonth}
-                onChange={(e) => handleChange('birthMonth', e.target.value)}
-                placeholder="01"
-              />
-              <span>월</span>
-              <S.BirthInput
-                value={form.birthDay}
-                onChange={(e) => handleChange('birthDay', e.target.value)}
-                placeholder="01"
-              />
-              <span>일</span>
-            </S.BirthRow>
           </S.InputWrapper>
       
           <BasicButton
