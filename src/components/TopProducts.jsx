@@ -57,8 +57,8 @@ const ProductLink = styled(Link)`
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
   color: #222;
   text-decoration: none;
-  width: 90px; /* 고정 너비 */
-  height: 90px;
+  width: 90px;
+  height: 95px;
   box-sizing: border-box;
 `;
 
@@ -91,6 +91,7 @@ const EmojiBadge = styled.div`
 const TopProducts = () => {
   const rankEmojis = ["🥇", "🥈", "🥉"];
   const [topProducts, setTopProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     axios
@@ -117,6 +118,7 @@ const TopProducts = () => {
                 })
             )
           );
+
           setTopProducts(detailedProducts.filter((p) => p));
         } else {
           console.error("인기 상품 조회 실패:", res.data.errorMsg);
@@ -124,10 +126,14 @@ const TopProducts = () => {
       })
       .catch((err) => {
         console.error("Top 상품 목록 조회 중 오류:", err);
+      })
+      .finally(() => {
+        setLoading(false);
       });
   }, []);
 
-  if (topProducts.length === 0) return null;
+  if (loading)
+    return <SectionTitle>로딩 중... 잠시만 기다려주세요!</SectionTitle>;
 
   return (
     <>
