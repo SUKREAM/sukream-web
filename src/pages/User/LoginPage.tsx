@@ -7,6 +7,7 @@ import sukreamIcon from '../../assets/images/sukreamIcon.svg';
 import sukreamTitle from '../../assets/images/SUKREAM.svg';
 import naver from '../../assets/images/naver.svg';
 import kakao from '../../assets/images/kakao.svg';
+import google from '../../assets/images/google.svg';
 
 
 export const LoginPage = () => {
@@ -49,6 +50,11 @@ export const LoginPage = () => {
       <BasicButton size="full" social="naver" shape='square' onClick={() => handleOAuth('naver')} >
       <img src={naver} alt="네이버" width="20" />
       네이버로 시작하기
+      </BasicButton>
+
+      <BasicButton size="full" social="google" shape='square' onClick={() => handleOAuth('naver')} >
+      <img src={google} alt="네이버" width="20" />
+      구글로 시작하기
       </BasicButton>
 
       <BasicButton size="full" social="email" shape='square' onClick={handleSelfLogin}>
