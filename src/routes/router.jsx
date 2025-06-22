@@ -20,6 +20,7 @@ import SellerReviewPage from "../pages/Review/SellerReviewPage";
 
 // MyPage 관련 Import
 import MyPage from "../pages/MyPage/MyPage";
+import {UserEditPage} from "../pages/MyPage/UserEditPage"
 
 // Bidder 관련 import
 import AwardManagementPage from "../pages/Bidder/AwardManagementPage";
@@ -54,6 +55,7 @@ const router = createBrowserRouter([
       { path: "mypage", element: <MyPage /> },
       { path: "mypage/buy", element: <BuyHistoryPage /> },
       { path: "mypage/sell", element: <SellHistoryPage /> },
+      { path: "mypage/update", element: <UserEditPage/>},
 
       // 경매 관련 라우트
       { path: "award-management/:productId", element: <AwardManagementPage /> },

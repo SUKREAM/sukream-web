@@ -36,7 +36,7 @@ const MyPage = () => {
         <MenuItem onClick={() => navigate("/mypage/buy")}>구매 내역 확인</MenuItem>
         <MenuItem onClick={() => navigate("/mypage/sell")}>판매 내역 확인</MenuItem>
         <MenuItem onClick={() => navigate("/reviews")}>받은 후기 보기</MenuItem>
-        <MenuItem onClick={() => alert("로그아웃 처리할 예정")}>로그아웃</MenuItem>
+        <MenuItem onClick={() => navigate("/mypage/update")}>회원정보 수정</MenuItem>
       </MenuList>
     </PageWrapper>
   );
