@@ -8,24 +8,27 @@ import sukreamTitle from '../../assets/images/SUKREAM.svg';
 import naver from '../../assets/images/naver.svg';
 import kakao from '../../assets/images/kakao.svg';
 import google from '../../assets/images/google.svg';
+import { useModal } from '../../hooks/useModal';
 
 
 export const LoginPage = () => {
   const navigate = useNavigate();
-
-  const kakaoLogin = useOAuthVerification();
-  const naverLogin = useOAuthVerification();
+  const { thirdModalOpen } = useModal();
 
   const handleOAuth = useCallback(
-    (provider: 'kakao' | 'naver') => {
+    (provider: 'kakao' | 'naver' | 'google') => {
+      localStorage.setItem('oauth_provider', provider);
       const CLIENT_ID = process.env[`REACT_APP_${provider.toUpperCase()}_CLIENT_ID`];
-      const REDIRECT_URI = process.env[`REACT_APP_${provider.toUpperCase()}_REDIRECT_URI`];
+      const REDIRECT_URI = process.env[`REACT_APP_REDIRECT_URI`];
       const AUTH_URL =
         provider === 'kakao'
           ? `https://kauth.kakao.com/oauth/authorize?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&response_type=code`
-          : `https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&state=sukream`;
+          : provider === 'naver'
+          ? `https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&state=sukream`
+          : `https://accounts.google.com/o/oauth2/auth?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&response_type=code&scope=https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile`;
 
       window.location.href = AUTH_URL;
+
     },
     []
   );
@@ -52,7 +55,7 @@ export const LoginPage = () => {
       네이버로 시작하기
       </BasicButton>
 
-      <BasicButton size="full" social="google" shape='square' onClick={() => handleOAuth('naver')} >
+      <BasicButton size="full" social="google" shape='square' onClick={() => handleOAuth('google')} >
       <img src={google} alt="네이버" width="20" />
       구글로 시작하기
       </BasicButton>

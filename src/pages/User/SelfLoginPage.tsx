@@ -10,6 +10,7 @@ import * as S from './SelfLoginPage.styles';
 import { FindEmailModal } from './component/FindEmailModal';
 import { useModal } from '../../hooks/useModal';
 import { FindPasswordModal } from './component/FindPasswordModal';
+import { useGetUserInfo } from '../MyPage/hooks/useGetUserInfo';
 
 export const SelfLoginPage = () => {
 const navigate = useNavigate();
@@ -19,6 +20,7 @@ const [pw, setPw] = useState('');
 const [touched, setTouched] = useState({ email: false, pw: false });
 const { secondModalOpen, modalOpen } = useModal();
 const [saveEmail, setSaveEmail] = useState(false);
+const { data: userInfo, isLoading} = useGetUserInfo();
 
 
 const { mutate: login } = useLogin();
@@ -32,7 +34,7 @@ const handleLogin = () => {
         {
             onSuccess: (data) => {
                 console.log('로그인 성공, 토큰:', data.accessToken);
-                setStoredUser(data.userInfo, data.accessToken);
+                setStoredUser(userInfo, data.accessToken);
                 navigate('/main');
             },
             onError: (error) => {

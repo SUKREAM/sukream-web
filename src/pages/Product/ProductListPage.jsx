@@ -3,6 +3,10 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import TopProducts from "../../components/TopProducts";
+import {OAuthModal} from '../User/component/OAuthModal';
+import { useModal } from '../../hooks/useModal';
+import { useLocation } from 'react-router-dom';
+
 
 const categories = [
   "전체",
@@ -19,6 +23,14 @@ const ProductListPage = () => {
   const [products, setProducts] = useState([]);
   const [category, setCategory] = useState("전체");
   const [sort, setSort] = useState("basic");
+  const { thirdModalOpen } = useModal();
+  const provider = localStorage.getItem('oauth_provider');
+
+  useEffect(() => {
+    if (provider) {
+      thirdModalOpen();
+    }
+  }, [provider]);
 
   useEffect(() => {
     let url = `http://localhost:8080/api/product`;
@@ -44,6 +56,7 @@ const ProductListPage = () => {
   return (
     <PageWrapper>
       <Main>
+      <OAuthModal />
         <CategoryBar>
           {categories.map((cat) => (
             <CategoryButton

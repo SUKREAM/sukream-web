@@ -5,10 +5,12 @@ import BasicButton from '../../components/Button';
 import * as S from '../User/SelfLoginPage.styles'
 import { useGetUserInfo } from './hooks/useGetUserInfo';
 import { useUpdateUser } from './hooks/useUpdateUser'
+import { getStoredUser } from "../../utils/userStorage";
+
 
 export const UserEditPage = () => {
     const navigate = useNavigate();
-    const { data: userInfo } = useGetUserInfo();
+    const { data: userInfo, isLoading} = useGetUserInfo();
     const { mutate: updateUser } = useUpdateUser();
 
     const [form, setForm] = useState({
@@ -23,7 +25,7 @@ export const UserEditPage = () => {
     const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
     useEffect(() => {
-      if (userInfo) {
+      if (getStoredUser() || userInfo) {
         const { name, email, phoneNumber } = userInfo;
       
         setForm({
