@@ -33,6 +33,8 @@ export const UserEditPage = () => {
           password: '1234',
           confirmPassword: '1234',
         });
+      } else {
+        navigate("/")
       }
     }, [userInfo]);
     
